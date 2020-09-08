@@ -1,0 +1,13 @@
+.authors {
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.card-image {
+  padding: 0 10px;
+}
+
+.card-action {
+  display: flex;
+  flex-direction: row;
+}

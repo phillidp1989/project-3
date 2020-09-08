@@ -1,0 +1,26 @@
+.g {
+  color: #4285F4;
+}
+
+.o {
+  color: #DB4437;
+}
+
+.oo {
+  color: #F4B400;
+}
+
+.l {
+  color: #0F9D58;
+}
+
+.e {
+  color: #DB4437;
+}
+
+@media only screen and (max-width: 992px) {
+  nav .brand-logo {
+    width: 100%;
+    left: 70%;
+  }
+}
