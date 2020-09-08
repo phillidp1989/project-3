@@ -173,7 +173,7 @@ export default function SearchAppBar() {
                   My dashboard
                 </MenuItem>
                 <a
-                  href="https://app-factory-api.herokuapp.com/auth/logout"
+                  href="/auth/logout"
                   className={classes.link}
                 >
                   <MenuItem

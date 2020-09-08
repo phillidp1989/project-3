@@ -88,7 +88,7 @@ export default function PostCard({ id, title, description, details, score, liked
       try {
         setLikes(likes + 1);
         setLiked(true);
-        const result = await axios.put('https://app-factory-api.herokuapp.com/api/posts/like', {
+        const result = await axios.put('/api/posts/like', {
           postId: id,
           userId: user._id
         })
@@ -104,7 +104,7 @@ export default function PostCard({ id, title, description, details, score, liked
       setLiked(false);
       console.log(id);
       console.log(user._id);
-      const result = await axios.put('https://app-factory-api.herokuapp.com/api/posts/unlike', {
+      const result = await axios.put('/api/posts/unlike', {
         postId: id,
         userId: user._id
       });
