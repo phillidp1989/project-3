@@ -5,7 +5,6 @@ const cookieSession = require('cookie-session');
 const path = require('path');
 
 const authRoutes = require('./routes/authRoutes');
-const searchRoutes = require('./routes/searchRoute');
 const apiRoutes = require('./routes/apiRoutes');
 const config = require('./config/config');
 const connectDB = require('./config/db');
