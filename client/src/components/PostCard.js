@@ -88,10 +88,7 @@ export default function PostCard({ id, title, description, details, score, liked
       try {
         setLikes(likes + 1);
         setLiked(true);
-        const result = await axios.put('/api/posts/like', {
-          postId: id,
-          userId: user._id
-        })
+        const result = await API.likePost(id, user._id);
       } catch (err) {
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
@@ -101,13 +98,8 @@ export default function PostCard({ id, title, description, details, score, liked
   const unlikeHandler = async () => {
     try {
       setLikes(likes - 1);
-      setLiked(false);
-      console.log(id);
-      console.log(user._id);
-      const result = await axios.put('/api/posts/unlike', {
-        postId: id,
-        userId: user._id
-      });
+      setLiked(false);      
+      const result = await API.unlikePost(id, user._id);
       console.log(result);
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
