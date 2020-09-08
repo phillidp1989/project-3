@@ -10,9 +10,9 @@ const config = require('./config/config');
 const connectDB = require('./config/db');
 
 // OAuth passport strategies
-require('./config/githubAuth');
-require('./config/googleAuth');
-require('./config/facebookAuth');
+require('./config/githubPassport');
+require('./config/googlePassport');
+require('./config/facebookPassport');
 
 //To use .env file on localserver
 require('dotenv').config();
@@ -44,9 +44,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
-app.use('/', searchRoutes);
 
 app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
