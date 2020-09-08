@@ -10,9 +10,9 @@ const config = require('./config/config');
 const connectDB = require('./config/db');
 
 // OAuth passport strategies
-require('./config/githubPassport');
-require('./config/googlePassport');
-require('./config/facebookPassport');
+require('./config/githubAuth');
+require('./config/googleAuth');
+require('./config/facebookAuth');
 
 //To use .env file on localserver
 require('dotenv').config();
