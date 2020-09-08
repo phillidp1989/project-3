@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 // Creation of User schema
-const userSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     provider: {
       type: String,
-      required: true,
+      required: true
     },
     providerId: {
       type: String,
@@ -13,18 +13,25 @@ const userSchema = new mongoose.Schema(
       required: true
     },
     username: {
-      type: String,                 
-    },    
+      type: String
+    },
     displayName: {
-      type: String,
-    },    
+      type: String
+    },
     avatar: {
-      type: String,
-    }    
+      type: String
+    },
+    isDeveloper: {
+      type: Boolean,
+      default: false
+    },
+    // Reference to document in the Post collection to allow populate method to be used
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+    solutions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Solution' }]
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

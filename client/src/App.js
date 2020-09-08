@@ -1,31 +1,27 @@
-import React from "react";
-import "./App.css";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-import Login from "./pages/Login";
-import Search from "./pages/Search";
-import Saved from "./pages/Saved";
-import PrivateRoute from "./hocs/PrivateRoute";
-import LoginPrivate from "./hocs/LoginPrivate";
+import React from 'react';
+import AppBar from './components/AppBar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import AllPosts from './pages/AllPosts';
+import Dashboard from './pages/Dashboard';
+import NewPost from './pages/NewPost';
+import Login from './pages/Login';
+import PrivateRoute from './hocs/PrivateRoute';
+import { CssBaseline } from '@material-ui/core';
+import GuestRoute from './hocs/GuestRoute';
 
-function App() {
+export default function App() {
   return (
-    <div>
+    <div className="App">
+      <CssBaseline />
       <Router>
-        <Route path="/">
-          <Redirect to="/login" />
-        </Route>
-        <Route path="/search">
-          <Redirect to="/search" />
-        </Route>
-        <Route path="/savedbooks">
-          <Redirect to="/savedbooks" />
-        </Route>   
-        <LoginPrivate path="/login" component={Login} />
-        <PrivateRoute path="/search" component={Search} />
-        <PrivateRoute path="/savedbooks" component={Saved} />
+        <Switch>
+          <GuestRoute path="/login" component={Login} />
+          <Route path="*" component={AppBar} />
+        </Switch>
+        <Route exact path="/" component={AllPosts} />
+        <PrivateRoute path="/dashboard" component={Dashboard} />
+        <PrivateRoute path="/posts/new" component={NewPost} />
       </Router>
     </div>
   );
 }
-
-export default App;

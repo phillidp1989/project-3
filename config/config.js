@@ -5,12 +5,9 @@ module.exports = {
     uri: process.env.MONGO_URI
   },
   express: {
-    port: process.env.PORT || 3001
+    port: process.env.PORT || 5000
   },
   cookie: {
     key: process.env.SECRET_KEY
-  },
-  api: {
-    key: process.env.API_KEY
   }
 };
