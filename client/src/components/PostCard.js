@@ -13,7 +13,13 @@ import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import axios from 'axios';
+import BuildIcon from '@material-ui/icons/Build';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
+import BrushIcon from '@material-ui/icons/Brush';
+import MicIcon from '@material-ui/icons/Mic';
+import MovieIcon from '@material-ui/icons/Movie';
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import { UserContext } from '../context/UserContext';
 import Toast from './Toast';
 import API from '../utils/API';
@@ -47,25 +53,62 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5
   },
   liked: {
-    fill: "#52b202"
+    fill: '#52b202'
   }
 }));
 
-export default function PostCard({ id, title, description, details, score, likedBy }) {
+export default function PostCard({
+  id,
+  title,
+  category,
+  summary,
+  description,
+  score,
+  likedBy,
+  date
+}) {
   // Material UI card
   const classes = useStyles();
   const { user, isLoaded } = useContext(UserContext);
   const [expanded, setExpanded] = React.useState(false);
-  const [likes, setLikes] = useState(score)
-  const [liked, setLiked] = useState(null)
+  const [likes, setLikes] = useState(score);
+  const [liked, setLiked] = useState(null);
   const [open, setOpen] = React.useState(false);
 
-  const handleToast = () => {
-    setOpen(true);
-  };
+  // Date parsing
+  const postDate = new Date(date);
+  const createdAt = postDate.toLocaleString('en-GB', { timeZone: 'UTC' });
 
+  // Icon selection based on category
+  let categoryIcon;
 
+  switch (category[0]) {
+    case 'Business':
+      categoryIcon = <BusinessCenterIcon />;
+      break;
+    case 'Utility':
+      categoryIcon = <BuildIcon />;
+      break;
+    case 'Entertainment':
+      categoryIcon = <MovieIcon />;
+      break;
+    case 'Design':
+      categoryIcon = <BrushIcon />;
+      break;
+    case 'Journalism':
+      categoryIcon = <MicIcon />;
+      break;
+    case 'Lifestyle':
+      categoryIcon = <AccessibilityNewIcon />;
+      break;
+    case 'games':
+      categoryIcon = <SportsEsportsIcon />;
+      break;
+    default:
+      break;
+  }
 
+  // Checks whether logged in user has liked the post
   useEffect(() => {
     if (user) {
       if (likedBy.includes(user._id) && isLoaded) {
@@ -76,11 +119,18 @@ export default function PostCard({ id, title, description, details, score, liked
     }
   }, [isLoaded]);
 
+  // Toast handler for non-logged in users trying to like a post
+  const handleToast = () => {
+    setOpen(true);
+  };
+
+  // Handles expansion of card
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
   };
 
+  // Handles liking a post
   const likeHandler = async () => {
     if (!user) {
       handleToast();
@@ -93,25 +143,25 @@ export default function PostCard({ id, title, description, details, score, liked
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
     }
-  }
+  };
 
+  // Handles unliking a post
   const unlikeHandler = async () => {
     try {
       setLikes(likes - 1);
-      setLiked(false);      
+      setLiked(false);
       const result = await API.unlikePost(id, user._id);
-      console.log(result);
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
     }
-  }
+  };
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="post" className={classes.avatar}>
-            P
+            {categoryIcon}
           </Avatar>
         }
         action={
@@ -121,29 +171,34 @@ export default function PostCard({ id, title, description, details, score, liked
         }
         key={title}
         title={title}
-        subheader="September 14, 2016"
+        subheader={createdAt}
       />
 
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {description}
+          {summary}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        {!isLoaded ? null : [liked && isLoaded ?
-          <IconButton aria-label="thumb down" onClick={unlikeHandler} >
-            <ThumbUpAltIcon className={classes.liked} />
-            <Typography variant="h6" className={classes.score}>
-              {likes}
-            </Typography>
-          </IconButton> :
-          <IconButton aria-label="thumb up" onClick={likeHandler}>
-            <ThumbUpAltIcon />
-            <Typography variant="h6" className={classes.score}>
-              {likes}
-            </Typography>
-          </IconButton>]
-        }
+        {!isLoaded
+          ? null
+          : [
+            liked && isLoaded ? (
+              <IconButton aria-label="thumb down" onClick={unlikeHandler}>
+                <ThumbUpAltIcon className={classes.liked} />
+                <Typography variant="h6" className={classes.score}>
+                  {likes}
+                </Typography>
+              </IconButton>
+            ) : (
+                <IconButton aria-label="thumb up" onClick={likeHandler}>
+                  <ThumbUpAltIcon />
+                  <Typography variant="h6" className={classes.score}>
+                    {likes}
+                  </Typography>
+                </IconButton>
+              )
+          ]}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded
@@ -157,8 +212,8 @@ export default function PostCard({ id, title, description, details, score, liked
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>More About:</Typography>
-          <Typography paragraph>{details}</Typography>
+          <Typography paragraph>Description:</Typography>
+          <Typography paragraph>{description}</Typography>
         </CardContent>
       </Collapse>
       <Toast open={open} setOpen={setOpen} />
