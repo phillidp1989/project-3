@@ -121,7 +121,7 @@ module.exports = {
     try {
       const result = await db.Post.updateOne(
         { _id: postId },
-        { $pullAll: { likedBy: userId }, $inc: { score: -1 } }
+        { $pull: { likedBy: userId }, $inc: { score: -1 } }
       );
       res.status(200).json(result);
     } catch (err) {

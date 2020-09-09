@@ -1,0 +1,27 @@
+# Config file for labeler to auto label Pull Requests
+documentation:
+  - README.md
+  - docs/**/*
+
+config:
+  - config/**/*
+
+db:
+  - db/**/*
+  - models/**/*
+
+automation:
+  - .github/**/*.yml
+  - .eslintrc.json
+
+npm packages:
+  - '**/package.json'
+  - '**/package-lock.json'
+
+models:
+  - models/*
+  - models/**/*
+
+routes:
+  - routes/*
+  - routes/**/*

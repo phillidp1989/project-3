@@ -144,7 +144,8 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-          {user && isLoaded ? (
+          {!isLoaded ? null : 
+          [user && isLoaded ? (
             <div>
               <ProfilePic handleMenu={handleMenu} />
               <Menu
@@ -195,7 +196,7 @@ export default function SearchAppBar() {
               >
                 Login
               </Button>
-            )}
+            )]}
         </Toolbar>
       </AppBar>
     </div>

@@ -17,5 +17,15 @@ export default {
     } catch (err) {
       console.error('ERROR - API.js - likePost', err);
     }
+  },
+  unlikePost: async (postId, userId) => {
+    try {
+      return await axios.put('/api/posts/unlike', {
+        postId,
+        userId
+      })
+    } catch (err) {
+      console.error('ERROR - API.js - likePost', err);
+    }
   }
 }
