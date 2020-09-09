@@ -20,7 +20,7 @@ export default {
   },
   unlikePost: async (postId, userId) => {
     try {
-      return await axios.put('/api/posts/like', {
+      return await axios.put('/api/posts/unlike', {
         postId,
         userId
       })
