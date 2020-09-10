@@ -13,7 +13,7 @@ export default function TabPanel({ children, value, index, ...other }) {
     >
       {value === index && (
         <Box p={3}>
-          {children}
+          <Typography>{children}</Typography>
         </Box>
       )}
     </div>

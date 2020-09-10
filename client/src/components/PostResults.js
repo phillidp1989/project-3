@@ -22,10 +22,12 @@ export default function PostResults() {
     fetchPosts();
   }, [currentPage]);
 
+  // Pagination logic
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
+  // Page change handler
   const handleChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -37,8 +39,10 @@ export default function PostResults() {
           <PostCard
             id={post._id}
             title={post.title}
-            description={post.summary}
-            details={post.description}
+            date={post.createdAt}
+            category={post.category}
+            summary={post.summary}
+            description={post.description}
             score={post.score}
             likedBy={post.likedBy}
           />

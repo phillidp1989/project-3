@@ -15,7 +15,7 @@ export default {
         userId
       })
     } catch (err) {
-      console.error('ERROR - API.js - likePost', err);
+      console.error('ERROR - API.js - allPosts', err);
     }
   },
   unlikePost: async (postId, userId) => {
@@ -25,7 +25,7 @@ export default {
         userId
       })
     } catch (err) {
-      console.error('ERROR - API.js - likePost', err);
+      console.error('ERROR - API.js - unlikePost', err);
     }
   }
 }

@@ -17,10 +17,10 @@ const PostSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    categories: {
+    category: [{
       type: String,
       required: true
-    },
+    }],
     technologies: [{ type: String }],
     score: {
       type: Number,
