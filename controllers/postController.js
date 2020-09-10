@@ -57,7 +57,7 @@ module.exports = {
         { _id: posterId },
         { $push: { posts: result._id } }
       );
-      res.status(200).json(result, ref);
+      res.json(result);
     } catch (err) {
       next(err);
     }
