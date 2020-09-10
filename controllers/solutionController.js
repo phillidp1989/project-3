@@ -90,11 +90,11 @@ module.exports = {
       ]);
       const postRef = await db.Post.updateOne(
         { _id: query.postId._id },
-        { $pullAll: { solutions: solutionId } }
+        { $pull: { solutions: solutionId } }
       );
       const userRef = await db.User.updateOne(
         { _id: query.developerId._id },
-        { $pullAll: { solutions: solutionId } }
+        { $pull: { solutions: solutionId } }
       );
       const result = await db.Solution.remove({ _id: solutionId });
       res.status(200).json(result, postRef, userRef);
@@ -121,7 +121,7 @@ module.exports = {
     try {
       const result = await db.Solution.updateOne(
         { _id: solutionId },
-        { $pullAll: { comment } }
+        { $pull: { comment } }
       );
       res.status(200).json(result);
     } catch (err) {
@@ -147,7 +147,7 @@ module.exports = {
     try {
       const result = await db.Solution.updateOne(
         { _id: solutionId },
-        { $pullAll: { likedBy: userId }, $inc: { score: -1 } }
+        { $pull: { likedBy: userId }, $inc: { score: -1 } }
       );
       res.status(200).json(result);
     } catch (err) {

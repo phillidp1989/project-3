@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5
   },
   liked: {
-    fill: "#52b202"
+    fill: '#52b202'
   }
 }));
 
@@ -71,8 +71,8 @@ export default function PostCard({
   const classes = useStyles();
   const { user, isLoaded } = useContext(UserContext);
   const [expanded, setExpanded] = React.useState(false);
-  const [likes, setLikes] = useState(score)
-  const [liked, setLiked] = useState(null)
+  const [likes, setLikes] = useState(score);
+  const [liked, setLiked] = useState(null);
   const [open, setOpen] = React.useState(false);
 
   // Date parsing
@@ -116,11 +116,18 @@ export default function PostCard({
     }
   }, [isLoaded]);
 
+  // Toast handler for non-logged in users trying to like a post
+  const handleToast = () => {
+    setOpen(true);
+  };
+
+  // Handles expansion of card
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
   };
 
+  // Handles liking a post
   const likeHandler = async () => {
     if (!user) {
       handleToast();
@@ -133,8 +140,9 @@ export default function PostCard({
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
     }
-  }
+  };
 
+  // Handles unliking a post
   const unlikeHandler = async () => {
     try {
       setLikes(likes - 1);
@@ -143,7 +151,7 @@ export default function PostCard({
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
     }
-  }
+  };
 
   return (
     <Card className={classes.root}>
@@ -169,20 +177,25 @@ export default function PostCard({
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        {!isLoaded ? null : [liked && isLoaded ?
-          <IconButton aria-label="thumb down" onClick={unlikeHandler} >
-            <ThumbUpAltIcon className={classes.liked} />
-            <Typography variant="h6" className={classes.score}>
-              {likes}
-            </Typography>
-          </IconButton> :
-          <IconButton aria-label="thumb up" onClick={likeHandler}>
-            <ThumbUpAltIcon />
-            <Typography variant="h6" className={classes.score}>
-              {likes}
-            </Typography>
-          </IconButton>]
-        }
+        {!isLoaded
+          ? null
+          : [
+            liked && isLoaded ? (
+              <IconButton aria-label="thumb down" onClick={unlikeHandler}>
+                <ThumbUpAltIcon className={classes.liked} />
+                <Typography variant="h6" className={classes.score}>
+                  {likes}
+                </Typography>
+              </IconButton>
+            ) : (
+                <IconButton aria-label="thumb up" onClick={likeHandler}>
+                  <ThumbUpAltIcon />
+                  <Typography variant="h6" className={classes.score}>
+                    {likes}
+                  </Typography>
+                </IconButton>
+              )
+          ]}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded
