@@ -150,8 +150,8 @@ module.exports = {
       const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
       const completedSolutions = userQuery.solutions.map(
         (solution) => solution.deployedLink
-      );
-      const inProgressSolutions = totalSolutions - completedSolutions.length;
+      ).length;
+      const inProgressSolutions = totalSolutions - completedSolutions;
 
       // Bar chart data
       const categoriesArray = userQuery.posts.map((post) => post.category);
