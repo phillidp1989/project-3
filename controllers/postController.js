@@ -158,7 +158,7 @@ module.exports = {
         (post) => post.solutions.length > 0
       ).length;
       const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
-      const completedSolutions = userQuery.solutions.map(
+      const completedSolutions = userQuery.solutions.filter(
         (solution) => solution.deployedLink
       ).length;
       const inProgressSolutions = totalSolutions - completedSolutions;
