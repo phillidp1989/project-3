@@ -131,8 +131,10 @@ module.exports = {
   activeDeveloperAvatars: async (req, res, next) => {
     const { id } = req.params;
     try {
-      const result = await db.Post.findOne({ _id: id }).populate('activeDevelopers');
-      const avatarArray = result.activeDevelopers.map(user => user.avatar);
+      const result = await db.Post.findOne({ _id: id }).populate(
+        'activeDevelopers'
+      );
+      const avatarArray = result.activeDevelopers.map((user) => user.avatar);
       res.status(200).json({ activeDevelopers: avatarArray });
     } catch (err) {
       next(err);
@@ -158,7 +160,7 @@ module.exports = {
         (post) => post.solutions.length > 0
       ).length;
       const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
-      const completedSolutions = userQuery.solutions.map(
+      const completedSolutions = userQuery.solutions.filter(
         (solution) => solution.deployedLink
       ).length;
       const inProgressSolutions = totalSolutions - completedSolutions;
