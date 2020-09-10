@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Toast({ open, setOpen }) {
+export default function Toast({ open, setOpen, text }) {
   const classes = useStyles();
 
   const handleClose = (event, reason) => {
@@ -30,7 +30,7 @@ export default function Toast({ open, setOpen }) {
     <div className={classes.root}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="info">
-          Login to like a post!
+          {text}
         </Alert>
       </Snackbar>
     </div>
