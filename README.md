@@ -38,7 +38,7 @@ The developers can log in using GitHub Account and can post solutions to any ide
 
 The developer's dashboard can be used to quickly check all the apps the developer has responded to along with all revisions.
 
-The App Factory is one page application build with _`React.js`_ and _`Material UI`_ framework for front end and _`mongoDB`_ database with _`mongoose`_ and an _`express.js`_ server for the backend.
+The App Factory is one page application build with `React.js` and _`Material UI`_ framework for front end and _`mongoDB`_ database with _`mongoose`_ and an _`express.js`_ server for the backend.
 
 _`Facebook, Github and Google OAuth2 Passport`_ packages are used for authentication and the app is deployed on Heroku.
 
