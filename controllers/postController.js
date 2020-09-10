@@ -4,7 +4,7 @@ module.exports = {
   // Get all posts for homepage
   allPosts: async (req, res, next) => {
     try {
-      const results = await db.Post.find({}).sort({ date: -1 });
+      const results = await db.Post.find({});
       res.status(200).json(results);
     } catch (err) {
       next(err);
@@ -124,6 +124,51 @@ module.exports = {
         { $pull: { likedBy: userId }, $inc: { score: -1 } }
       );
       res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+  // Information to be displayed on dashboard
+  dashboardInfo: async (req, res, next) => {
+    const { id: userId } = req.params;
+    try {
+      const userQuery = await db.User.findOne({ _id: userId }).populate([
+        'posts',
+        'solutions'
+      ]);
+      const totalPosts = userQuery.posts.length;
+      const totalSolutions = userQuery.solutions.length;
+      const totalPostLikes = userQuery.posts.map(post => post.score).reduce((a, b) => a + b, 0);
+      const totalSolutionLikes = userQuery.solutions.map(post => post.score).reduce((a, b) => a + b, 0);
+      const totalPostsWithSolutions = userQuery.posts.filter(post => post.solutions.length > 0).length;
+      const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
+      const completedSolutions = userQuery.solutions.map(solution => solution.deployedLink);
+      const inProgressSolutions = totalSolutions - completedSolutions.length;
+
+      // Bar chart data
+      const categoriesArray = userQuery.posts.map(post => post.category);
+      const mergedCategories = [].concat.apply([], categoriesArray);
+      const categoryCount = [];
+      const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+      categoryCount.push(countOccurrences(mergedCategories, 'Business'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Design'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Gaming'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Journalism'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Marketing'));
+      const categoryList = ['Business', 'Design', 'Gaming', 'Journalism', 'Marketing'];
+
+      res.status(200).json({
+        totalPosts,
+        totalSolutions,
+        totalPostLikes,
+        totalSolutionLikes,
+        totalPostsWithSolutions,
+        totalPostsWithoutSolutions,
+        completedSolutions,
+        inProgressSolutions,
+        categoryList,
+        categoryCount
+      });
     } catch (err) {
       next(err);
     }

@@ -3,6 +3,7 @@ const passport = require('passport');
 const logger = require('morgan');
 const cookieSession = require('cookie-session');
 const path = require('path');
+const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
 const apiRoutes = require('./routes/apiRoutes');
@@ -14,19 +15,25 @@ require('./config/githubAuth');
 require('./config/googleAuth');
 require('./config/facebookAuth');
 
-//To use .env file on localserver
+// To use .env file on localserver
 require('dotenv').config();
 
 // Initialize express into app variable
 const app = express();
 
+app.use(cors({
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true
+}));
+
 // Initialize Morgan logger
-app.use(logger("dev"));
+app.use(logger('dev'));
 
 // Cookie Session setup for persistent authentication
 app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000,
-  keys: [config.cookie.key],
+  keys: [config.cookie.key]
 }));
 
 // Middleware
@@ -34,10 +41,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve up static assets
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
 }
-
 
 // Initialize passport and sessions
 app.use(passport.initialize());
@@ -47,7 +53,7 @@ app.use(passport.session());
 app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 
-app.get('/*', function(req, res) {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
