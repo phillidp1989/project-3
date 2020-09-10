@@ -102,10 +102,6 @@ export default function PostCard({
       break;
   }
 
-  const handleToast = () => {
-    setOpen(true);
-  };
-
   useEffect(() => {
     if (user) {
       if (likedBy.includes(user._id) && isLoaded) {
