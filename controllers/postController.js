@@ -138,24 +138,39 @@ module.exports = {
       ]);
       const totalPosts = userQuery.posts.length;
       const totalSolutions = userQuery.solutions.length;
-      const totalPostLikes = userQuery.posts.map(post => post.score).reduce((a, b) => a + b, 0);
-      const totalSolutionLikes = userQuery.solutions.map(post => post.score).reduce((a, b) => a + b, 0);
-      const totalPostsWithSolutions = userQuery.posts.filter(post => post.solutions.length > 0).length;
+      const totalPostLikes = userQuery.posts
+        .map((post) => post.score)
+        .reduce((a, b) => a + b, 0);
+      const totalSolutionLikes = userQuery.solutions
+        .map((post) => post.score)
+        .reduce((a, b) => a + b, 0);
+      const totalPostsWithSolutions = userQuery.posts.filter(
+        (post) => post.solutions.length > 0
+      ).length;
       const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
-      const completedSolutions = userQuery.solutions.map(solution => solution.deployedLink);
+      const completedSolutions = userQuery.solutions.map(
+        (solution) => solution.deployedLink
+      );
       const inProgressSolutions = totalSolutions - completedSolutions.length;
 
       // Bar chart data
-      const categoriesArray = userQuery.posts.map(post => post.category);
+      const categoriesArray = userQuery.posts.map((post) => post.category);
       const mergedCategories = [].concat.apply([], categoriesArray);
       const categoryCount = [];
-      const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+      const countOccurrences = (arr, val) =>
+        arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
       categoryCount.push(countOccurrences(mergedCategories, 'Business'));
       categoryCount.push(countOccurrences(mergedCategories, 'Design'));
       categoryCount.push(countOccurrences(mergedCategories, 'Gaming'));
       categoryCount.push(countOccurrences(mergedCategories, 'Journalism'));
       categoryCount.push(countOccurrences(mergedCategories, 'Marketing'));
-      const categoryList = ['Business', 'Design', 'Gaming', 'Journalism', 'Marketing'];
+      const categoryList = [
+        'Business',
+        'Design',
+        'Gaming',
+        'Journalism',
+        'Marketing'
+      ];
 
       res.status(200).json({
         totalPosts,

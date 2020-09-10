@@ -1,8 +1,8 @@
-const passport = require("passport");
-const User = require("../models/User");
-const FacebookStrategy = require("passport-facebook").Strategy;
+const passport = require('passport');
+const User = require('../models/User');
+const FacebookStrategy = require('passport-facebook').Strategy;
 
-require("dotenv").config();
+require('dotenv').config();
 
 passport.serializeUser((user, done) => {
   done(null, user.providerId);
@@ -13,7 +13,7 @@ passport.deserializeUser(async (id, done) => {
     const user = await User.findOne({ providerId: id });
     done(null, user);
   } catch (err) {
-    console.log("ERROR - facebookAuth.js - deserializeUser", err);
+    console.log('ERROR - facebookAuth.js - deserializeUser', err);
   }
 });
 
@@ -22,7 +22,7 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "/auth/facebook/redirect",
+      callbackURL: '/auth/facebook/redirect'
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -30,18 +30,18 @@ passport.use(
         if (result) {
           done(null, result);
         } else {
-          console.log(profile);           
+          console.log(profile);
           const user = await new User({
-            provider: "Facebook",
+            provider: 'Facebook',
             providerId: profile.id,
-            username: profile.displayName + profile.id,            
+            username: profile.displayName + profile.id,
             displayName: profile.displayName,
-            avatar: `https://graph.facebook.com/${profile.id}/picture?type=large`            
+            avatar: `https://graph.facebook.com/${profile.id}/picture?type=large`
           }).save();
           done(null, user);
         }
       } catch (err) {
-        console.log("ERROR - facebookAuth.js - FacebookStrategy", err);
+        console.log('ERROR - facebookAuth.js - FacebookStrategy', err);
       }
     }
   )
