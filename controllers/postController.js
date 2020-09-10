@@ -127,5 +127,49 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  // Dashboard data
+  dashboardInfo: async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const result = await db.User.findById(id).populate([
+        'posts',
+        'solutions'
+      ]);
+
+      const totalPosts = result.posts.length;
+      const totalSolutions = result.solutions.length;
+      const postLikes = result.posts.map(post => post.score).reduce((a, b) => a + b, 0);
+      const solutionLikes = result.solutions.map(post => post.score).reduce((a, b) => a + b, 0);
+      const postsWithSolution = result.posts.filter(post => post.solutions.length > 0).length;
+      const postsWithoutSolution = totalPosts - postsWithSolution;
+      const completedSolutions = result.solutions.filter(solution => solution.deployedLink).length;
+      const inProgressSolutions = totalSolutions - completedSolutions;
+      const category2dArray = result.posts.map(post => post.category);
+      const categoryArray = [].concat.apply([], category2dArray);
+      const categoryData = [];
+      const categoryCount = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+      categoryData.push(categoryCount(categoryArray, 'Business'));
+      categoryData.push(categoryCount(categoryArray, 'Design'));
+      categoryData.push(categoryCount(categoryArray, 'Gaming'));
+      categoryData.push(categoryCount(categoryArray, 'Journalism'));
+      categoryData.push(categoryCount(categoryArray, 'Marketing'));
+      const categoryList = ['Business', 'Design', 'Gaming', 'Journalism', 'Marketing'];
+
+      res.status(200).json({
+        totalPosts,
+        totalSolutions,
+        postLikes,
+        solutionLikes,
+        postsWithSolution,
+        postsWithoutSolution,
+        completedSolutions,
+        inProgressSolutions,
+        categoryData,
+        categoryList
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 };
