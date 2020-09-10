@@ -21,7 +21,7 @@ router.put('/posts', postController.updatePost);
 router.put('/posts/like', postController.likePost);
 // Unlike post
 router.put('/posts/unlike', postController.unlikePost);
-// Dashboard information
+// Get dashboard data
 router.get('/posts/dashboard/:id', postController.dashboardInfo);
 
 // Solutions

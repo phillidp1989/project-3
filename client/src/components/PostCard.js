@@ -1,28 +1,28 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import BuildIcon from '@material-ui/icons/Build';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import BrushIcon from '@material-ui/icons/Brush';
 import MicIcon from '@material-ui/icons/Mic';
-import MovieIcon from '@material-ui/icons/Movie';
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import { UserContext } from '../context/UserContext';
 import Toast from './Toast';
 import API from '../utils/API';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Collapse,
+  Avatar,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,11 +86,8 @@ export default function PostCard({
     case 'Business':
       categoryIcon = <BusinessCenterIcon />;
       break;
-    case 'Utility':
-      categoryIcon = <BuildIcon />;
-      break;
-    case 'Entertainment':
-      categoryIcon = <MovieIcon />;
+    case 'Marketing':
+      categoryIcon = <MonetizationOnIcon />;
       break;
     case 'Design':
       categoryIcon = <BrushIcon />;
@@ -98,17 +95,17 @@ export default function PostCard({
     case 'Journalism':
       categoryIcon = <MicIcon />;
       break;
-    case 'Lifestyle':
-      categoryIcon = <AccessibilityNewIcon />;
-      break;
-    case 'games':
+    case 'Gaming':
       categoryIcon = <SportsEsportsIcon />;
       break;
     default:
       break;
   }
 
-  // Checks whether logged in user has liked the post
+  const handleToast = () => {
+    setOpen(true);
+  };
+
   useEffect(() => {
     if (user) {
       if (likedBy.includes(user._id) && isLoaded) {
@@ -212,7 +209,7 @@ export default function PostCard({
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Description:</Typography>
+          <Typography paragraph>Summary:</Typography>
           <Typography paragraph>{description}</Typography>
         </CardContent>
       </Collapse>

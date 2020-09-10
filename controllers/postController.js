@@ -4,7 +4,7 @@ module.exports = {
   // Get all posts for homepage
   allPosts: async (req, res, next) => {
     try {
-      const results = await db.Post.find({}).sort({ date: -1 });
+      const results = await db.Post.find({});
       res.status(200).json(results);
     } catch (err) {
       next(err);
@@ -128,45 +128,46 @@ module.exports = {
       next(err);
     }
   },
-  // Dashboard data
+  // Information to be displayed on dashboard
   dashboardInfo: async (req, res, next) => {
-    const { id } = req.params;
+    const { id: userId } = req.params;
     try {
-      const result = await db.User.findById(id).populate([
+      const userQuery = await db.User.findOne({ _id: userId }).populate([
         'posts',
         'solutions'
       ]);
+      const totalPosts = userQuery.posts.length;
+      const totalSolutions = userQuery.solutions.length;
+      const totalPostLikes = userQuery.posts.map(post => post.score).reduce((a, b) => a + b, 0);
+      const totalSolutionLikes = userQuery.solutions.map(post => post.score).reduce((a, b) => a + b, 0);
+      const totalPostsWithSolutions = userQuery.posts.filter(post => post.solutions.length > 0).length;
+      const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
+      const completedSolutions = userQuery.solutions.map(solution => solution.deployedLink);
+      const inProgressSolutions = totalSolutions - completedSolutions.length;
 
-      const totalPosts = result.posts.length;
-      const totalSolutions = result.solutions.length;
-      const postLikes = result.posts.map(post => post.score).reduce((a, b) => a + b, 0);
-      const solutionLikes = result.solutions.map(post => post.score).reduce((a, b) => a + b, 0);
-      const postsWithSolution = result.posts.filter(post => post.solutions.length > 0).length;
-      const postsWithoutSolution = totalPosts - postsWithSolution;
-      const completedSolutions = result.solutions.filter(solution => solution.deployedLink).length;
-      const inProgressSolutions = totalSolutions - completedSolutions;
-      const category2dArray = result.posts.map(post => post.category);
-      const categoryArray = [].concat.apply([], category2dArray);
-      const categoryData = [];
-      const categoryCount = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
-      categoryData.push(categoryCount(categoryArray, 'Business'));
-      categoryData.push(categoryCount(categoryArray, 'Design'));
-      categoryData.push(categoryCount(categoryArray, 'Gaming'));
-      categoryData.push(categoryCount(categoryArray, 'Journalism'));
-      categoryData.push(categoryCount(categoryArray, 'Marketing'));
+      // Bar chart data
+      const categoriesArray = userQuery.posts.map(post => post.category);
+      const mergedCategories = [].concat.apply([], categoriesArray);
+      const categoryCount = [];
+      const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+      categoryCount.push(countOccurrences(mergedCategories, 'Business'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Design'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Gaming'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Journalism'));
+      categoryCount.push(countOccurrences(mergedCategories, 'Marketing'));
       const categoryList = ['Business', 'Design', 'Gaming', 'Journalism', 'Marketing'];
 
       res.status(200).json({
         totalPosts,
         totalSolutions,
-        postLikes,
-        solutionLikes,
-        postsWithSolution,
-        postsWithoutSolution,
+        totalPostLikes,
+        totalSolutionLikes,
+        totalPostsWithSolutions,
+        totalPostsWithoutSolutions,
         completedSolutions,
         inProgressSolutions,
-        categoryData,
-        categoryList
+        categoryList,
+        categoryCount
       });
     } catch (err) {
       next(err);
