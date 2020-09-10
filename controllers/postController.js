@@ -131,8 +131,10 @@ module.exports = {
   activeDeveloperAvatars: async (req, res, next) => {
     const { id } = req.params;
     try {
-      const result = await db.Post.findOne({ _id: id }).populate('activeDevelopers');
-      const avatarArray = result.activeDevelopers.map(user => user.avatar);
+      const result = await db.Post.findOne({ _id: id }).populate(
+        'activeDevelopers'
+      );
+      const avatarArray = result.activeDevelopers.map((user) => user.avatar);
       res.status(200).json({ activeDevelopers: avatarArray });
     } catch (err) {
       next(err);
