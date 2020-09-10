@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { ThumbUpAltIcon } from '@material-ui/icons/ThumbUpAlt';
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
