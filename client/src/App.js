@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 import NewPost from './pages/NewPost';
 import Login from './pages/Login';
 import PrivateRoute from './hocs/PrivateRoute';
-import DeveloperRoute from './hocs/DeveloperRoute;';
+import DeveloperRoute from './hocs/DeveloperRoute';
 import { CssBaseline } from '@material-ui/core';
 import GuestRoute from './hocs/GuestRoute';
 import SolutionForm from './pages/Solution/SolutionForm';
