@@ -23,6 +23,7 @@ import {
   IconButton,
   Typography
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -160,7 +161,7 @@ export default function PostCard({
           </IconButton>
         }
         key={title}
-        title={title}
+        title={<Link to={`/posts/${id}`}>{title}</Link>}
         subheader={createdAt}
       />
 

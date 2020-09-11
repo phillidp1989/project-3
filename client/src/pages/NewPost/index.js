@@ -14,7 +14,7 @@ import {
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import API from '../../utils/API';
 import { UserContext } from '../../context/UserContext';
-import Toast from '../../components/Toast';
+import SuccessDialog from '../../components/SuccessDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Index() {
   const classes = useStyles();
   const { user } = useContext(UserContext);
-  const [open, setOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [postData, setPostData] = useState({
     title: '',
@@ -157,7 +157,7 @@ export default function Index() {
 
     try {
       const result = await API.savePost(newPost);
-      handleToast();
+      setDialogOpen(true);
     } catch (err) {
       console.error('ERROR - index.js - postForm', err);
     }
@@ -169,9 +169,6 @@ export default function Index() {
     setErr({ ...err, [name]: value.length === 0 });
   };
 
-  const handleToast = () => {
-    setOpen(true);
-  };
 
   return (
     <React.Fragment>
@@ -205,7 +202,12 @@ export default function Index() {
           <PostAddIcon />
         </Fab>
       </Zoom>
-      <Toast open={open} setOpen={setOpen} text={'You have successfully submitted a post!'} />
+      <SuccessDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        returnTo='Return to homepage'
+        successText='You have successfully added your idea to the App Factory'
+      />
     </React.Fragment>
   );
 }
