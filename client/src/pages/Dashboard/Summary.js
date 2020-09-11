@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CenteredGrid() {
   const classes = useStyles();
-  const { user, isLoaded } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [userPosts, setUserPosts] = useState([]);
   const [postsLoaded, setPostsLoaded] = useState(false);
 

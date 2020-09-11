@@ -55,7 +55,28 @@ export default {
     } catch (err) {
       console.error('ERROR - API.js - savePost', err);
     }
-  }
+  },
+  github: async (username) => {
+    try {
+      return await axios.get(`https://api.github.com/users/${username}/repos?per_page=100`);
+    } catch (err) {
+      console.error('ERROR - API.js - github', err);
+    }
+  },
+  saveSolution: async (solutionData) => {
+    try {
+      return await axios.post('/api/solutions', solutionData);
+    } catch (err) {
+      console.error('ERROR - API.js - saveSolution', err);
+    }
+  },
+  getPost: async (id) => {
+    try {
+      return await axios.get(`/api/posts/${id}`);
+    } catch (err) {
+      console.error('ERROR - API.js - getPost', err);
+    }
+  },
 };
 
 
