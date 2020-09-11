@@ -21,8 +21,9 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography,
+  Typography
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2)
   },
   score: {
-    marginLeft: 5
+    marginLeft: 5,
+    fontSize: 15
   },
   liked: {
     fill: '#52b202'
@@ -116,18 +118,11 @@ export default function PostCard({
     }
   }, [isLoaded]);
 
-  // Toast handler for non-logged in users trying to like a post
-  const handleToast = () => {
-    setOpen(true);
-  };
-
-  // Handles expansion of card
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
   };
 
-  // Handles liking a post
   const likeHandler = async () => {
     if (!user) {
       handleToast();
@@ -142,7 +137,6 @@ export default function PostCard({
     }
   };
 
-  // Handles unliking a post
   const unlikeHandler = async () => {
     try {
       setLikes(likes - 1);
@@ -167,7 +161,7 @@ export default function PostCard({
           </IconButton>
         }
         key={title}
-        title={title}
+        title={<Link to={`/posts/${id}`}>{title}</Link>}
         subheader={createdAt}
       />
 
@@ -213,7 +207,7 @@ export default function PostCard({
           <Typography paragraph>{description}</Typography>
         </CardContent>
       </Collapse>
-      <Toast open={open} setOpen={setOpen} />
+      <Toast open={open} setOpen={setOpen} text={'Login to like a post!'} />
     </Card>
   );
 }

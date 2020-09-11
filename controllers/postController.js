@@ -36,7 +36,7 @@ module.exports = {
       title,
       summary,
       description,
-      categories,
+      category,
       technologies,
       posterId
     } = req.body;
@@ -45,7 +45,7 @@ module.exports = {
         title,
         summary,
         description,
-        categories,
+        category,
         technologies,
         posterId,
         score: 0,
@@ -57,7 +57,7 @@ module.exports = {
         { _id: posterId },
         { $push: { posts: result._id } }
       );
-      res.status(200).json(result, ref);
+      res.json(result);
     } catch (err) {
       next(err);
     }
@@ -128,6 +128,18 @@ module.exports = {
       next(err);
     }
   },
+  activeDeveloperAvatars: async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const result = await db.Post.findOne({ _id: id }).populate(
+        'activeDevelopers'
+      );
+      const avatarArray = result.activeDevelopers.map((user) => user.avatar);
+      res.status(200).json({ activeDevelopers: avatarArray });
+    } catch (err) {
+      next(err);
+    }
+  },
   // Information to be displayed on dashboard
   dashboardInfo: async (req, res, next) => {
     const { id: userId } = req.params;
@@ -148,7 +160,7 @@ module.exports = {
         (post) => post.solutions.length > 0
       ).length;
       const totalPostsWithoutSolutions = totalPosts - totalPostsWithSolutions;
-      const completedSolutions = userQuery.solutions.map(
+      const completedSolutions = userQuery.solutions.filter(
         (solution) => solution.deployedLink
       ).length;
       const inProgressSolutions = totalSolutions - completedSolutions;
@@ -156,6 +168,7 @@ module.exports = {
       // Bar chart data
       const categoriesArray = userQuery.posts.map((post) => post.category);
       const mergedCategories = [].concat.apply([], categoriesArray);
+      console.log(userQuery.posts);
       const categoryCount = [];
       const countOccurrences = (arr, val) =>
         arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
@@ -182,7 +195,8 @@ module.exports = {
         completedSolutions,
         inProgressSolutions,
         categoryList,
-        categoryCount
+        categoryCount,
+        user: userQuery.posts
       });
     } catch (err) {
       next(err);

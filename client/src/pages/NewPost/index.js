@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import PostForm from './PostForm';
@@ -12,6 +12,9 @@ import {
   Grow
 } from '@material-ui/core';
 import PostAddIcon from '@material-ui/icons/PostAdd';
+import API from '../../utils/API';
+import { UserContext } from '../../context/UserContext';
+import SuccessDialog from '../../components/SuccessDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,12 +40,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Index() {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const [postData, setPostData] = useState({
     title: '',
     summary: '',
     description: '',
-    categories: [
+    category: [
       {
         name: 'Business',
         checked: false
@@ -64,14 +69,15 @@ export default function Index() {
         checked: false
       }
     ],
-    technologies: []
+    technologies: [],
+    posterId: ""
   });
 
   const [err, setErr] = useState({
     title: false,
     summary: false,
-    categories: false,
-    categoriesOverLimit: false,
+    category: false,
+    categoryOverLimit: false,
     description: false
   });
 
@@ -87,29 +93,29 @@ export default function Index() {
 
   const handleCategory = (e) => {
     const { name, checked } = e.target;
-    const { categories } = postData;
-    const i = categories.findIndex((obj) => obj.name === name);
-    const updatedCategories = [...categories];
-    updatedCategories[i] = { name, checked };
+    const { category } = postData;
+    const i = category.findIndex((obj) => obj.name === name);
+    const updatedCategory = [...category];
+    updatedCategory[i] = { name, checked };
     setPostData({
       ...postData,
-      categories: updatedCategories
+      category: updatedCategory
     });
 
     //Checking for errors
-    const chosenCategoryCount = updatedCategories.filter(
+    const chosenCategoryCount = updatedCategory.filter(
       ({ checked }) => checked
     ).length;
     setErr((e) => ({
       ...e,
-      categories: chosenCategoryCount === 0,
-      categoriesOverLimit: chosenCategoryCount > 2
+      category: chosenCategoryCount === 0,
+      categoryOverLimit: chosenCategoryCount > 2
     }));
   };
 
-  const postForm = () => {
+  const postForm = async () => {
     // Checking if err state is true and returning key if so
-    const errCheck = (err, { title, summary, description, categories }) => {
+    const errCheck = (err, { title, summary, description, category }) => {
       // These checks need to be separate so the inputs don't flag errors on page load
       // Check if user interacted with form at all
       if (title + summary + description === '') return 'something';
@@ -118,7 +124,7 @@ export default function Index() {
       if (title.length === 0) return 'title';
       if (summary.length === 0) return 'summary';
       if (description.length === 0) return 'description';
-      const chosenCategoryCount = categories.filter(({ checked }) => checked)
+      const chosenCategoryCount = category.filter(({ checked }) => checked)
         .length;
       if (chosenCategoryCount === 0) return 'categories';
 
@@ -138,12 +144,23 @@ export default function Index() {
     }
 
     // Filtering categories to array of strings
-    const categories = postData.categories
+    const category = postData.category
       .filter(({ checked }) => checked)
       .map(({ name }) => name);
 
-    const newPost = { ...postData, categories };
-    console.log(newPost);
+    // Mapping technologies into an array of strings
+    const technologies = postData.technologies.map(
+      (technology) => technology.title
+    );
+
+    const newPost = { ...postData, category, technologies, posterId: user._id };
+
+    try {
+      const result = await API.savePost(newPost);
+      setDialogOpen(true);
+    } catch (err) {
+      console.error('ERROR - index.js - postForm', err);
+    }
   };
 
   const inputErrCheck = (e) => {
@@ -151,6 +168,7 @@ export default function Index() {
     // Setting error state if required input changes to empty
     setErr({ ...err, [name]: value.length === 0 });
   };
+
 
   return (
     <React.Fragment>
@@ -184,6 +202,13 @@ export default function Index() {
           <PostAddIcon />
         </Fab>
       </Zoom>
+      <SuccessDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        returnLink={'/'}
+        returnTo='Return to homepage'
+        successText='You have successfully added your idea to the App Factory'
+      />
     </React.Fragment>
   );
 }

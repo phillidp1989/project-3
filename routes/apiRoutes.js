@@ -23,6 +23,11 @@ router.put('/posts/like', postController.likePost);
 router.put('/posts/unlike', postController.unlikePost);
 // Get dashboard data
 router.get('/posts/dashboard/:id', postController.dashboardInfo);
+// Get avatars of active developers
+router.get(
+  '/posts/activedeveloperavatars/:id',
+  postController.activeDeveloperAvatars
+);
 
 // Solutions
 

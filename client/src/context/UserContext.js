@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
-import axios from 'axios';
+import API from '../utils/API';
 
 export const UserContext = createContext();
 
@@ -9,14 +9,14 @@ export default ({ children }) => {
 
   const getUser = async () => {
     try {
-      const result = await axios.get('/api/user', { withCredentials: true });
+      const result = await API.currentUser();
       console.log(result.data.user);
       setUser(result.data.user);
       setIsLoaded(true);
     } catch (err) {
-      console.error("ERROR - UserContext.js - getUser", err);
+      console.error('ERROR - UserContext.js - getUser', err);
     }
-  }
+  };
 
   useEffect(() => {
     getUser();
@@ -28,5 +28,5 @@ export default ({ children }) => {
         {children}
       </UserContext.Provider>
     </div>
-  )
-}
+  );
+};
