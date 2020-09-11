@@ -28,7 +28,7 @@ The App Factory is a platform that unites both creative people that have interes
 
 The user can log in using Google Account or Facebook Account and can view all the other App Ideas posted by all users.
 
-The Apps Ideas posts with most numerous likes are displayed first and the user can view details on each one.
+The Apps Ideas posts can be filtered depending the number of likes or the date they have been created.
 
 After login, the User Dashboard can be used to check proprietary ideas and features visual statistics regarding the user posts.
 
@@ -36,7 +36,7 @@ The user can check all the solutions from developers for the specific idea by ac
 
 The developers can log in using GitHub Account and can post solutions to any idea by filling in a form with the required information.
 
-The developer's dashboard can be used to quickly check all the apps the developer has responded to along with all revisions.
+The Developer Dashboard can be used to quickly check all the apps the developer has responded to along with all revisions.
 
 The App Factory is one page application build with `React.js` and _`Material UI`_ framework for front end and _`mongoDB`_ database with _`mongoose`_ and an _`express.js`_ server for the backend.
 
