@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PostCard from './PostCard';
+import AppFilterMenu from './AppFilterMenu';
+import BasicPagination from './Pagniation';
 import { Grid } from '@material-ui/core';
 import { UserContext } from '../context/UserContext';
 import API from '../utils/API';
 
 export default function UserPosts() {
   const [posts, setPosts] = useState([]);
+  const [activePosts, setActivePosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(5);
   const { user, isLoaded } = useContext(UserContext);
 
   useEffect(() => {
@@ -15,17 +20,33 @@ export default function UserPosts() {
         if (user) {
           const { data } = await API.getUserPosts(user._id);
           setPosts(data);
+          setActivePosts(data);
         }
       } catch (err) {
         console.error('ERROR - UserPosts() - getUserPosts', err);
       }
     };
     getUserPosts();
-  }, [isLoaded]);
+  }, [currentPage]);
+
+  // Pagination logic
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = activePosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Page change handler
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <React.Fragment>
-      {posts.map((post) => (
+      <AppFilterMenu
+        posts={posts}
+        activePosts={activePosts}
+        setActivePosts={setActivePosts}
+      />
+      {currentPosts.map((post) => (
         <Grid item xs={10} key={post.title}>
           <PostCard
             id={post._id}
@@ -39,6 +60,13 @@ export default function UserPosts() {
           />
         </Grid>
       ))}
+      <Grid item xs={10}>
+        <BasicPagination
+          postsPerPage={postsPerPage}
+          totalPosts={posts.length}
+          handleChange={handleChange}
+        />
+      </Grid>
     </React.Fragment>
   );
 }

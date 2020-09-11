@@ -47,7 +47,7 @@ export default function Index() {
     title: '',
     summary: '',
     description: '',
-    categories: [
+    category: [
       {
         name: 'Business',
         checked: false
@@ -76,8 +76,8 @@ export default function Index() {
   const [err, setErr] = useState({
     title: false,
     summary: false,
-    categories: false,
-    categoriesOverLimit: false,
+    category: false,
+    categoryOverLimit: false,
     description: false
   });
 
@@ -93,29 +93,29 @@ export default function Index() {
 
   const handleCategory = (e) => {
     const { name, checked } = e.target;
-    const { categories } = postData;
-    const i = categories.findIndex((obj) => obj.name === name);
-    const updatedCategories = [...categories];
-    updatedCategories[i] = { name, checked };
+    const { category } = postData;
+    const i = category.findIndex((obj) => obj.name === name);
+    const updatedCategory = [...category];
+    updatedCategory[i] = { name, checked };
     setPostData({
       ...postData,
-      categories: updatedCategories
+      category: updatedCategory
     });
 
     //Checking for errors
-    const chosenCategoryCount = updatedCategories.filter(
+    const chosenCategoryCount = updatedCategory.filter(
       ({ checked }) => checked
     ).length;
     setErr((e) => ({
       ...e,
-      categories: chosenCategoryCount === 0,
-      categoriesOverLimit: chosenCategoryCount > 2
+      category: chosenCategoryCount === 0,
+      categoryOverLimit: chosenCategoryCount > 2
     }));
   };
 
   const postForm = async () => {
     // Checking if err state is true and returning key if so
-    const errCheck = (err, { title, summary, description, categories }) => {
+    const errCheck = (err, { title, summary, description, category }) => {
       // These checks need to be separate so the inputs don't flag errors on page load
       // Check if user interacted with form at all
       if (title + summary + description === '') return 'something';
@@ -124,7 +124,7 @@ export default function Index() {
       if (title.length === 0) return 'title';
       if (summary.length === 0) return 'summary';
       if (description.length === 0) return 'description';
-      const chosenCategoryCount = categories.filter(({ checked }) => checked)
+      const chosenCategoryCount = category.filter(({ checked }) => checked)
         .length;
       if (chosenCategoryCount === 0) return 'categories';
 
@@ -144,7 +144,7 @@ export default function Index() {
     }
 
     // Filtering categories to array of strings
-    const categories = postData.categories
+    const category = postData.category
       .filter(({ checked }) => checked)
       .map(({ name }) => name);
 
@@ -153,7 +153,7 @@ export default function Index() {
       (technology) => technology.title
     );
 
-    const newPost = { ...postData, categories, technologies, posterId: user._id };
+    const newPost = { ...postData, category, technologies, posterId: user._id };
 
     try {
       const result = await API.savePost(newPost);
@@ -205,6 +205,7 @@ export default function Index() {
       <SuccessDialog
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
+        returnLink={'/'}
         returnTo='Return to homepage'
         successText='You have successfully added your idea to the App Factory'
       />
