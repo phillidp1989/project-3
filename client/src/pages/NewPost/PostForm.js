@@ -56,12 +56,12 @@ export default function PostForm({
         <FormControl
           required
           fullWidth
-          error={err.categories || err.categoriesOverLimit}
+          error={err.category || err.categoryOverLimit}
           component="fieldset"
         >
           <FormLabel component="legend">Pick up to two</FormLabel>
           <FormGroup row>
-            {postData.categories.map(({ name, checked }) => (
+            {postData.category.map(({ name, checked }) => (
               <FormControlLabel
                 key={name}
                 label={name}

@@ -1,5 +1,4 @@
 import React from 'react';
-import AppFilterMenu from '../../components/AppFilterMenu';
 import PostResults from '../../components/PostResults';
 import './style.css';
 import { Grid, Zoom, Fab } from '@material-ui/core';
@@ -29,7 +28,6 @@ export default function Index() {
         alignItems="center"
         className={classes.root}
       >
-        <AppFilterMenu />
         <PostResults />
       </Grid>
       <Zoom in={true}>

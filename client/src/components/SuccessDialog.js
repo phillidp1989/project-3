@@ -8,13 +8,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-export default function SuccessDialog({ dialogOpen, setDialogOpen, postId, returnTo, successText }) {
+export default function SuccessDialog({ dialogOpen, setDialogOpen, returnLink, returnTo, successText }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleClose = () => {
     setDialogOpen(false);
-    window.location.replace(`https://app-factory-djd.herokuapp.com/posts/${postId}`)
+    window.location.replace(`https://app-factory-djd.herokuapp.com/${returnLink}`)
   };
 
 

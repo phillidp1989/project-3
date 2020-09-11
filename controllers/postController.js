@@ -36,7 +36,7 @@ module.exports = {
       title,
       summary,
       description,
-      categories,
+      category,
       technologies,
       posterId
     } = req.body;
@@ -45,7 +45,7 @@ module.exports = {
         title,
         summary,
         description,
-        categories,
+        category,
         technologies,
         posterId,
         score: 0,
@@ -168,6 +168,7 @@ module.exports = {
       // Bar chart data
       const categoriesArray = userQuery.posts.map((post) => post.category);
       const mergedCategories = [].concat.apply([], categoriesArray);
+      console.log(userQuery.posts);
       const categoryCount = [];
       const countOccurrences = (arr, val) =>
         arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
@@ -194,7 +195,8 @@ module.exports = {
         completedSolutions,
         inProgressSolutions,
         categoryList,
-        categoryCount
+        categoryCount,
+        user: userQuery.posts
       });
     } catch (err) {
       next(err);
