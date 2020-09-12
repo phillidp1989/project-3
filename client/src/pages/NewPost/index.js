@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import PostForm from './PostForm';
@@ -14,7 +14,7 @@ import {
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import API from '../../utils/API';
 import { UserContext } from '../../context/UserContext';
-import Toast from '../../components/Toast';
+import SuccessDialog from '../../components/SuccessDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,16 +38,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Index() {
+export default function Index(props) {
   const classes = useStyles();
   const { user } = useContext(UserContext);
-  const [open, setOpen] = React.useState(false);
+  const { currentPost } = props.location;
 
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [postData, setPostData] = useState({
     title: '',
     summary: '',
     description: '',
-    categories: [
+    category: [
       {
         name: 'Business',
         checked: false
@@ -70,14 +71,28 @@ export default function Index() {
       }
     ],
     technologies: [],
-    posterId: ""
+    posterId: ''
   });
+
+  useEffect(() => {
+    if (user && currentPost && user._id === currentPost.posterId) {
+      setPostData((postData) => {
+        const categories = currentPost.category;
+        currentPost.category = postData.category.map(({ name, checked }) => ({
+          name,
+          checked: categories.includes(name)
+        }));
+        console.log(currentPost);
+        return currentPost;
+      });
+    }
+  }, [currentPost, user]);
 
   const [err, setErr] = useState({
     title: false,
     summary: false,
-    categories: false,
-    categoriesOverLimit: false,
+    category: false,
+    categoryOverLimit: false,
     description: false
   });
 
@@ -93,13 +108,13 @@ export default function Index() {
 
   const handleCategory = (e) => {
     const { name, checked } = e.target;
-    const { categories } = postData;
+    const { category: categories } = postData;
     const i = categories.findIndex((obj) => obj.name === name);
     const updatedCategories = [...categories];
     updatedCategories[i] = { name, checked };
     setPostData({
       ...postData,
-      categories: updatedCategories
+      category: updatedCategories
     });
 
     //Checking for errors
@@ -108,14 +123,14 @@ export default function Index() {
     ).length;
     setErr((e) => ({
       ...e,
-      categories: chosenCategoryCount === 0,
-      categoriesOverLimit: chosenCategoryCount > 2
+      category: chosenCategoryCount === 0,
+      categoryOverLimit: chosenCategoryCount > 2
     }));
   };
 
   const postForm = async () => {
     // Checking if err state is true and returning key if so
-    const errCheck = (err, { title, summary, description, categories }) => {
+    const errCheck = (err, { title, summary, description, category }) => {
       // These checks need to be separate so the inputs don't flag errors on page load
       // Check if user interacted with form at all
       if (title + summary + description === '') return 'something';
@@ -124,7 +139,7 @@ export default function Index() {
       if (title.length === 0) return 'title';
       if (summary.length === 0) return 'summary';
       if (description.length === 0) return 'description';
-      const chosenCategoryCount = categories.filter(({ checked }) => checked)
+      const chosenCategoryCount = category.filter(({ checked }) => checked)
         .length;
       if (chosenCategoryCount === 0) return 'categories';
 
@@ -144,20 +159,15 @@ export default function Index() {
     }
 
     // Filtering categories to array of strings
-    const categories = postData.categories
+    const category = postData.category
       .filter(({ checked }) => checked)
       .map(({ name }) => name);
 
-    // Mapping technologies into an array of strings
-    const technologies = postData.technologies.map(
-      (technology) => technology.title
-    );
-
-    const newPost = { ...postData, categories, technologies, posterId: user._id };
+    const newPost = { ...postData, category, posterId: user._id };
 
     try {
-      const result = await API.savePost(newPost);
-      handleToast();
+      await API.savePost(newPost);
+      setDialogOpen(true);
     } catch (err) {
       console.error('ERROR - index.js - postForm', err);
     }
@@ -169,12 +179,8 @@ export default function Index() {
     setErr({ ...err, [name]: value.length === 0 });
   };
 
-  const handleToast = () => {
-    setOpen(true);
-  };
-
   return (
-    <React.Fragment>
+    <>
       <Grow in={true} style={{ transitionDelay: '300ms' }}>
         <Container component={Paper} className={classes.root}>
           <Typography variant="h4">Enter Your New App Idea:</Typography>
@@ -205,7 +211,13 @@ export default function Index() {
           <PostAddIcon />
         </Fab>
       </Zoom>
-      <Toast open={open} setOpen={setOpen} text={'You have successfully submitted a post!'} />
-    </React.Fragment>
+      <SuccessDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+        returnLink={'/'}
+        returnTo="Return to homepage"
+        successText="You have successfully added your idea to the App Factory"
+      />
+    </>
   );
 }

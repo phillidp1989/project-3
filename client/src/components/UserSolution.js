@@ -56,18 +56,18 @@ const useStyles = makeStyles((theme) => ({
   },
   liked: {
     fill: '#52b202'
-  },
-  postsTitle: {
-    color: 'white'
   }
 }));
 
-export default function PostCard({
+export default function PostSolution({
   id,
   title,
   category,
   summary,
-  description,
+  repoName,
+  repoDescription,
+  deployed_link,
+  repo_link,
   score,
   likedBy,
   date
@@ -87,24 +87,26 @@ export default function PostCard({
   // Icon selection based on category
   let categoryIcon;
 
-  switch (category[0]) {
-    case 'Business':
-      categoryIcon = <BusinessCenterIcon />;
-      break;
-    case 'Marketing':
-      categoryIcon = <MonetizationOnIcon />;
-      break;
-    case 'Design':
-      categoryIcon = <BrushIcon />;
-      break;
-    case 'Journalism':
-      categoryIcon = <MicIcon />;
-      break;
-    case 'Gaming':
-      categoryIcon = <SportsEsportsIcon />;
-      break;
-    default:
-      break;
+  if (category) {
+    switch (category[0]) {
+      case 'Business':
+        categoryIcon = <BusinessCenterIcon />;
+        break;
+      case 'Marketing':
+        categoryIcon = <MonetizationOnIcon />;
+        break;
+      case 'Design':
+        categoryIcon = <BrushIcon />;
+        break;
+      case 'Journalism':
+        categoryIcon = <MicIcon />;
+        break;
+      case 'Gaming':
+        categoryIcon = <SportsEsportsIcon />;
+        break;
+      default:
+        break;
+    }
   }
 
   const handleToast = () => {
@@ -133,7 +135,10 @@ export default function PostCard({
       try {
         setLikes(likes + 1);
         setLiked(true);
-        const result = await API.likePost(id, user._id);
+        const result = await API.likeDevPost(id, user._id);
+
+        console.log(user._id);
+        console.log(id);
       } catch (err) {
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
@@ -144,11 +149,14 @@ export default function PostCard({
     try {
       setLikes(likes - 1);
       setLiked(false);
-      const result = await API.unlikePost(id, user._id);
+      const result = await API.unlikeDevPost(id, user._id);
+      console.log(user._id);
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
     }
   };
+
+  //------------------------------------
 
   return (
     <Card className={classes.root}>
@@ -164,16 +172,7 @@ export default function PostCard({
           </IconButton>
         }
         key={title}
-        title={
-          <Link
-            to={`/posts/${id}`}
-            className={classes.postsTitle}
-            color="primary"
-          >
-            {title}
-          </Link>
-        }
-        subheader={createdAt}
+        title={title}
       />
 
       <CardContent>
@@ -214,8 +213,25 @@ export default function PostCard({
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Summary:</Typography>
-          <Typography paragraph>{description}</Typography>
+          <Typography paragraph>Resources:</Typography>
+
+          <Typography paragraph>
+            Deployed Link:
+            {deployed_link ? (
+              <a href={deployed_link} target="_blank" rel="noopener noreferrer">
+                {deployed_link}
+              </a>
+            ) : (
+              'There is no current Deployed App'
+            )}
+          </Typography>
+
+          <Typography paragraph>
+            Repo Link:
+            <a href={deployed_link} target="_blank" rel="noopener noreferrer">
+              {repo_link}
+            </a>
+          </Typography>
         </CardContent>
       </Collapse>
       <Toast open={open} setOpen={setOpen} text={'Login to like a post!'} />

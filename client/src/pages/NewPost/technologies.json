@@ -1,13 +1,13 @@
 [
-  { "title": "HTML" },
-  { "title": "JavaScript" },
-  { "title": "Css" },
-  { "title": "jQuery" },
-  { "title": "React" },
-  { "title": "Angular" },
-  { "title": "Bootstrap" },
-  { "title": "MongoDB" },
-  { "title": "Express" },
-  { "title": "Node" },
-  { "title": "CLI" }
+  "HTML",
+  "JavaScript",
+  "Css",
+  "jQuery",
+  "React",
+  "Angular",
+  "Bootstrap",
+  "MongoDB",
+  "Express",
+  "Node",
+  "CLI"
 ]

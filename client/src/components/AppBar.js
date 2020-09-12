@@ -131,19 +131,6 @@ export default function SearchAppBar() {
             </IconButton>
             App Factory
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
           {user && isLoaded ? (
             <div>
               <ProfilePic handleMenu={handleMenu} />
@@ -164,7 +151,6 @@ export default function SearchAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem
                   component={Link}
                   to="/dashboard"
@@ -172,10 +158,7 @@ export default function SearchAppBar() {
                 >
                   My dashboard
                 </MenuItem>
-                <a
-                  href="/auth/logout"
-                  className={classes.link}
-                >
+                <a href="/auth/logout" className={classes.link}>
                   <MenuItem
                     onClick={() => {
                       handleClose();
@@ -187,15 +170,15 @@ export default function SearchAppBar() {
               </Menu>
             </div>
           ) : (
-              <Button
-                component={Link}
-                to="/login"
-                aria-label="Login"
-                color="inherit"
-              >
-                Login
-              </Button>
-            )}
+            <Button
+              component={Link}
+              to="/login"
+              aria-label="Login"
+              color="inherit"
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>

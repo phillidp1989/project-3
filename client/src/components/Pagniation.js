@@ -7,12 +7,6 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
-    },
-    [theme.breakpoints.up(780)]: {
-      position: "fixed",
-      right: 0,
-      left: 0,
-      bottom: theme.spacing(1)
     }
   },
   ul: {
