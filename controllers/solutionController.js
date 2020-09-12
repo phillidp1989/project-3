@@ -164,7 +164,14 @@ module.exports = {
       repoLink,
       deployedLink
     } = req.body;
-    console.log(_id, comments, repoName, repoDescription, repoLink, deployedLink);
+    console.log(
+      _id,
+      comments,
+      repoName,
+      repoDescription,
+      repoLink,
+      deployedLink
+    );
     try {
       const result = await db.Solution.updateOne(
         { _id },
