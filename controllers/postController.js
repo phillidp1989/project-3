@@ -36,7 +36,7 @@ module.exports = {
       title,
       summary,
       description,
-      categories,
+      category,
       technologies,
       posterId
     } = req.body;
@@ -45,7 +45,7 @@ module.exports = {
         title,
         summary,
         description,
-        categories,
+        category,
         technologies,
         posterId,
         score: 0,
@@ -194,7 +194,8 @@ module.exports = {
         completedSolutions,
         inProgressSolutions,
         categoryList,
-        categoryCount
+        categoryCount,
+        user: userQuery.posts
       });
     } catch (err) {
       next(err);

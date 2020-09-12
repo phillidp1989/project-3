@@ -54,6 +54,8 @@ router.put('/solutions/removecomment', solutionController.removeComment);
 router.put('/solutions/like', solutionController.likeSolution);
 // Unlike post
 router.put('/solutions/unlike', solutionController.unlikeSolution);
+// Update solution
+router.put('/solutions', solutionController.updateSolution);
 
 // Users
 
