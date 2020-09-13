@@ -36,7 +36,7 @@ module.exports = {
       title,
       summary,
       description,
-      categories,
+      category,
       technologies,
       posterId
     } = req.body;
@@ -45,7 +45,7 @@ module.exports = {
         title,
         summary,
         description,
-        categories,
+        category,
         technologies,
         posterId,
         score: 0,
@@ -57,7 +57,7 @@ module.exports = {
         { _id: posterId },
         { $push: { posts: result._id } }
       );
-      res.json(result);
+      res.json(result, ref);
     } catch (err) {
       next(err);
     }
@@ -194,7 +194,8 @@ module.exports = {
         completedSolutions,
         inProgressSolutions,
         categoryList,
-        categoryCount
+        categoryCount,
+        user: userQuery.posts
       });
     } catch (err) {
       next(err);

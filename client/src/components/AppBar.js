@@ -167,15 +167,15 @@ export default function SearchAppBar() {
               </Menu>
             </div>
           ) : (
-              <Button
-                component={Link}
-                to="/login"
-                aria-label="Login"
-                color="inherit"
-              >
-                Login
-              </Button>
-            )}
+            <Button
+              component={Link}
+              to="/login"
+              aria-label="Login"
+              color="inherit"
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>

@@ -153,5 +153,33 @@ module.exports = {
     } catch (err) {
       next(err);
     }
+  },
+  // Update post details
+  updateSolution: async (req, res, next) => {
+    const {
+      _id,
+      comments,
+      repoName,
+      repoDescription,
+      repoLink,
+      deployedLink
+    } = req.body;
+    try {
+      const result = await db.Solution.updateOne(
+        { _id },
+        {
+          $set: {
+            comments,
+            repoName,
+            repoDescription,
+            repoLink,
+            deployedLink
+          }
+        }
+      );
+      res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
   }
 };
