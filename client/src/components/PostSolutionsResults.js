@@ -42,6 +42,8 @@ export default function PostSolutionsResults({ postId }) {
             repo_link={solution.repoLink}
             likedBy={solution.likedBy}
             comments={solution.comments}
+            developerId={solution.developerId}
+            date={solution.createdAt}
           />
         </Grid>
       ))}
