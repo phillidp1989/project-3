@@ -21,10 +21,11 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography
+  Typography,
+  Button,
+  Grid
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import AvatarGroup from '@material-ui/lab/AvatarGroup';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,35 +59,34 @@ const useStyles = makeStyles((theme) => ({
   liked: {
     fill: '#52b202'
   },
-  postsTitle: {
-    color: 'white'
-  },
-  activeDevelopers: {
-    marginTop: 20
-  },
-  avatarGroup: {
-    marginTop: 20
+  editButton: {
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
-export default function PostCard({
+export default function PostSolution({
   id,
   title,
   category,
   summary,
-  description,
+  repoName,
+  repoDescription,
+  deployed_link,
+  repo_link,
   score,
   likedBy,
-  date
+  date,
+  comments,
+  developerId
 }) {
   // Material UI card
   const classes = useStyles();
   const { user, isLoaded } = useContext(UserContext);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = React.useState(false);
   const [likes, setLikes] = useState(score);
   const [liked, setLiked] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [avatars, setAvatars] = useState([]);
+  const [open, setOpen] = React.useState(false);
 
   // Date parsing
   const postDate = new Date(date);
@@ -95,24 +95,26 @@ export default function PostCard({
   // Icon selection based on category
   let categoryIcon;
 
-  switch (category[0]) {
-    case 'Business':
-      categoryIcon = <BusinessCenterIcon />;
-      break;
-    case 'Marketing':
-      categoryIcon = <MonetizationOnIcon />;
-      break;
-    case 'Design':
-      categoryIcon = <BrushIcon />;
-      break;
-    case 'Journalism':
-      categoryIcon = <MicIcon />;
-      break;
-    case 'Gaming':
-      categoryIcon = <SportsEsportsIcon />;
-      break;
-    default:
-      break;
+  if (category) {
+    switch (category[0]) {
+      case 'Business':
+        categoryIcon = <BusinessCenterIcon />;
+        break;
+      case 'Marketing':
+        categoryIcon = <MonetizationOnIcon />;
+        break;
+      case 'Design':
+        categoryIcon = <BrushIcon />;
+        break;
+      case 'Journalism':
+        categoryIcon = <MicIcon />;
+        break;
+      case 'Gaming':
+        categoryIcon = <SportsEsportsIcon />;
+        break;
+      default:
+        break;
+    }
   }
 
   const handleToast = () => {
@@ -129,18 +131,6 @@ export default function PostCard({
     }
   }, [isLoaded]);
 
-  useEffect(() => {
-    const getAvatars = async () => {
-      try {
-        const { data } = await API.getDeveloperAvatars(id);
-        setAvatars(data.activeDevelopers);
-      } catch (err) {
-        console.error('ERROR - PostCard.js - getAvatars', err);
-      }
-    };
-    getAvatars();
-  }, []);
-
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
@@ -153,7 +143,7 @@ export default function PostCard({
       try {
         setLikes(likes + 1);
         setLiked(true);
-        await API.likePost(id, user._id);
+        const result = await API.likeDevPost(id, user._id);
       } catch (err) {
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
@@ -164,15 +154,13 @@ export default function PostCard({
     try {
       setLikes(likes - 1);
       setLiked(false);
-      await API.unlikePost(id, user._id);
+      const result = await API.unlikeDevPost(id, user._id);
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
     }
   };
 
-  function createMarkup() {
-    return { __html: description };
-  }
+  //------------------------------------
 
   return (
     <Card className={classes.root}>
@@ -188,16 +176,7 @@ export default function PostCard({
           </IconButton>
         }
         key={title}
-        title={
-          <Link
-            to={`/posts/${id}`}
-            className={classes.postsTitle}
-            color="primary"
-          >
-            {title}
-          </Link>
-        }
-        subheader={createdAt}
+        title={title}
       />
 
       <CardContent>
@@ -238,24 +217,47 @@ export default function PostCard({
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Summary:</Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            component="p"
-            dangerouslySetInnerHTML={createMarkup()}
-          ></Typography>
-          {avatars.length === 0 ? null : (
-            <>
-              <Typography className={classes.activeDevelopers}>
-                Active developers:{' '}
-              </Typography>
-              <AvatarGroup className={classes.avatarGroup} max={4}>
-                {avatars.map((avatar) => (
-                  <Avatar alt="avatar" src={avatar} />
-                ))}
-              </AvatarGroup>
-            </>
+          <Typography paragraph>
+            Comments:{' '}
+            {comments.length === 0 ? (
+              'No comments'
+            ) : (
+                <ul>
+                  {comments.map((comment) => (
+                    <li>{comment}</li>
+                  ))}
+                </ul>
+              )}
+          </Typography>
+
+          <Typography paragraph>
+            Deployed Link:{' '}
+            {deployed_link ? (
+              <a href={deployed_link} target="_blank" rel="noopener noreferrer">
+                {deployed_link}
+              </a>
+            ) : (
+                'There is no current Deployed App'
+              )}
+          </Typography>
+
+          <Typography paragraph>
+            Repo Link:{' '}
+            <a href={repo_link} target="_blank" rel="noopener noreferrer">
+              {repo_link}
+            </a>
+          </Typography>
+          {user && user._id === developerId && (
+            <Grid item xs={12} className={classes.editButton}>
+              <Button
+                component={Link}
+                color="primary"
+                to={`/solution/edit/${id}`}
+                variant="contained"
+              >
+                Edit
+              </Button>
+            </Grid>
           )}
         </CardContent>
       </Collapse>

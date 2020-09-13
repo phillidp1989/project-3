@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import TabPanel from './TabPanel';
 import UserPosts from '../UserPage';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import Summary from './Summary';
+import UserSolution from '../UserSolutions';
+import { UserContext } from '../../context/UserContext';
 
 const a11yProps = (index) => ({
   id: `full-width-tab-${index}`,
@@ -20,6 +22,7 @@ const useStyles = makeStyles(({ palette }) => ({
 
 export default function Nav() {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -44,6 +47,7 @@ export default function Nav() {
         >
           <Tab label="Summary" {...a11yProps(0)} />
           <Tab label="Posts" {...a11yProps(1)} />
+          {user && user.isDeveloper && <Tab label="Solutions" {...a11yProps(3)} />}
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -57,6 +61,9 @@ export default function Nav() {
         <TabPanel value={value} index={1} dir={theme.direction}>
           <UserPosts />
         </TabPanel>
+        {user && user.isDeveloper && (<TabPanel value={value} index={2} dir={theme.direction}>
+          <UserSolution />
+        </TabPanel>)}
       </SwipeableViews>
     </div>
   );

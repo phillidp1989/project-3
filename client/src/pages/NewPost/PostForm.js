@@ -56,12 +56,12 @@ export default function PostForm({
         <FormControl
           required
           fullWidth
-          error={err.categories || err.categoriesOverLimit}
+          error={err.category || err.categoryOverLimit}
           component="fieldset"
         >
           <FormLabel component="legend">Pick up to two</FormLabel>
           <FormGroup row>
-            {postData.categories.map(({ name, checked }) => (
+            {postData.category.map(({ name, checked }) => (
               <FormControlLabel
                 key={name}
                 label={name}
@@ -84,6 +84,9 @@ export default function PostForm({
         </Typography>
         <CKEditor
           editor={ClassicEditor}
+          onInit={(editor) => {
+            editor.setData(postData.description);
+          }}
           onChange={(event, editor) => {
             const description = editor.getData();
             setPostData({ ...postData, description });
@@ -100,7 +103,8 @@ export default function PostForm({
           multiple
           id="tags-standard"
           options={technologies}
-          getOptionLabel={(option) => option.title}
+          getOptionLabel={(option) => option}
+          value={postData.technologies}
           renderInput={(params) => (
             <TextField
               {...params}

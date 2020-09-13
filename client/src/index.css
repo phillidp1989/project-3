@@ -13,6 +13,11 @@ code {
 }
 
 .ck-editor__editable {
+  color: #000000;
   min-height: 150px;
   max-height: 400px;
+}
+
+a {
+  color: #ffffff;
 }

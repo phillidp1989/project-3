@@ -2,13 +2,11 @@ import React, { useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
-import SearchIcon from '@material-ui/icons/Search';
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
-  InputBase,
   Menu,
   MenuItem,
   Button
@@ -82,8 +80,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   link: {
-    textDecoration: 'none !important',
-    color: 'black'
+    textDecoration: 'none'
   },
   pointer: {
     cursor: 'pointer'
@@ -131,19 +128,6 @@ export default function SearchAppBar() {
             </IconButton>
             App Factory
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
           {user && isLoaded ? (
             <div>
               <ProfilePic handleMenu={handleMenu} />
@@ -164,7 +148,6 @@ export default function SearchAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem
                   component={Link}
                   to="/dashboard"
@@ -172,10 +155,7 @@ export default function SearchAppBar() {
                 >
                   My dashboard
                 </MenuItem>
-                <a
-                  href="/auth/logout"
-                  className={classes.link}
-                >
+                <a href="/auth/logout" className={classes.link}>
                   <MenuItem
                     onClick={() => {
                       handleClose();
