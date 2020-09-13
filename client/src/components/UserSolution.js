@@ -26,6 +26,7 @@ import {
   Grid
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +88,10 @@ export default function PostSolution({
   const [likes, setLikes] = useState(score);
   const [liked, setLiked] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const [developer, setDeveloper] = useState({
+    displayName: '',
+    avatar: ''
+  })
 
   // Date parsing
   const postDate = new Date(date);
@@ -131,6 +136,21 @@ export default function PostSolution({
     }
   }, [isLoaded]);
 
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await API.getUser(developerId);
+        setDeveloper({
+          displayName: data.displayName,
+          avatar: data.avatar
+        })
+      } catch (err) {
+        console.error('ERROR - PostCard.js - getUser', err);
+      }
+    }
+    getUser();
+  }, [])
+
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
@@ -171,9 +191,7 @@ export default function PostSolution({
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          <Alert icon={<Avatar alt={developer.displayName} src={developer.avatar} />} variant="outlined" severity="info">{developer.displayName}<br></br>{createdAt}</Alert>
         }
         key={title}
         title={title}
