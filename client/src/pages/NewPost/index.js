@@ -214,7 +214,7 @@ export default function Index(props) {
       <SuccessDialog
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
-        returnLink={'/'}
+        returnLink={''}
         returnTo="Return to homepage"
         successText="You have successfully added your idea to the App Factory"
       />

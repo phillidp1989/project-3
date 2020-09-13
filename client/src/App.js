@@ -13,7 +13,8 @@ import DeveloperRoute from './hocs/DeveloperRoute';
 import { CssBaseline } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import GuestRoute from './hocs/GuestRoute';
-import SolutionForm from './pages/Solution/SolutionForm';
+import SolutionForm from './pages/SolutionForm';
+import SolutionEdit from './pages/SolutionEdit';
 import { blue } from '@material-ui/core/colors';
 
 const theme = createMuiTheme({
@@ -43,6 +44,10 @@ export default function App() {
             <DeveloperRoute
               path="/posts/solution/:id"
               component={SolutionForm}
+            />
+            <DeveloperRoute
+              path="/solution/edit/:id"
+              component={SolutionEdit}
             />
             <Route path="/posts/:id" component={AppPost} />
           </Switch>

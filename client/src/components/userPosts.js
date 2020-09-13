@@ -15,12 +15,13 @@ export default function UserPosts() {
 
   useEffect(() => {
     const getUserPosts = async () => {
-      console.log(user);
       try {
         if (user) {
           const { data } = await API.getUserPosts(user._id);
           setPosts(data);
-          setActivePosts(data);
+          if (activePosts.length === 0) {
+            setActivePosts(data);
+          }
         }
       } catch (err) {
         console.error('ERROR - UserPosts() - getUserPosts', err);

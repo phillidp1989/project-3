@@ -450,7 +450,7 @@ export default function SolutionForm() {
       <SuccessDialog
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
-        returnLink={`/posts/${id}`}
+        returnLink={`posts/${id}`}
         returnTo='Return to post'
         successText='You have successfully added your solution to the App Factory'
       />

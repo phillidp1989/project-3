@@ -47,9 +47,7 @@ export default {
   getUserPosts: async (id) => {
     try {
       return await axios.get(`/api/posts/user/${id}`);
-      // return await axios.get(
-      //   '/api/posts/user/5f458293eb85b45f1875891d'
-      // );
+
     } catch (err) {
       console.error('ERROR - API.js - getUserPosts', err);
     }
@@ -60,7 +58,7 @@ export default {
       console.log(postId);
       return await axios.get(
         `/api/solutions/post/${postId}`
-        // '/api/solutions/post/5f4c1eebdc995345f4a59af2'
+
       );
     } catch (err) {
       console.error('ERROR - API.js - getPostSolutions', err);
@@ -96,9 +94,31 @@ export default {
       console.error('ERROR - API.js - getPost', err);
     }
   },
+  getSolution: async (id) => {
+    try {
+      return await axios.get(`/api/solutions/${id}`);
+    } catch (err) {
+      console.error('ERROR - API.js - getSolution', err);
+    }
+  },
+  updateSolution: async (solutionData) => {
+    try {
+      console.log(solutionData);
+      return await axios.put(`/api/solutions`, solutionData);
+    } catch (err) {
+      console.error('ERROR - API.js - updateSolution', err);
+    }
+  },
+  deleteSolution: async (id) => {
+    try {
+      return await axios.delete(`/api/solutions/${id}`);
+    } catch (err) {
+      console.error('ERROR - API.js - deleteSolution', err);
+    }
+  },
   likeDevPost: async (solutionId, userId) => {
     try {
-      return await axios.put('/solutions/like', {
+      return await axios.put('/api/solutions/like', {
         solutionId,
         userId
       });
@@ -108,7 +128,7 @@ export default {
   },
   unlikeDevPost: async (solutionId, userId) => {
     try {
-      return await axios.put('/solutions/unlike', {
+      return await axios.put('/api/solutions/unlike', {
         solutionId,
         userId
       });
@@ -119,11 +139,17 @@ export default {
   getUserSolutions: async (id) => {
     try {
       return await axios.get(
-        `/solutions/developer/${id}`
-        // '/api/solutions/developer/5f458293eb85b45f1875891d'
+        `/api/solutions/developer/${id}`
       );
     } catch (err) {
       console.error('ERROR - API.js - getUserSolutions', err);
+    }
+  },
+  getDeveloperAvatars: async (id) => {
+    try {
+      return await axios.get(`/api/posts/activedeveloperavatars/${id}`)
+    } catch (err) {
+      console.error('ERROR - API.js - getDeveloperAvatars', err);
     }
   }
 };

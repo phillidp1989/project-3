@@ -41,6 +41,7 @@ export default function PostSolutionsResults({ postId }) {
             deployed_link={solution.deployedLink}
             repo_link={solution.repoLink}
             likedBy={solution.likedBy}
+            comments={solution.comments}
           />
         </Grid>
       ))}

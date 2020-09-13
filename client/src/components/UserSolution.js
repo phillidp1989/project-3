@@ -21,7 +21,9 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography
+  Typography,
+  Button,
+  Grid
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
@@ -56,6 +58,10 @@ const useStyles = makeStyles((theme) => ({
   },
   liked: {
     fill: '#52b202'
+  },
+  editButton: {
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
@@ -70,7 +76,9 @@ export default function PostSolution({
   repo_link,
   score,
   likedBy,
-  date
+  date,
+  comments,
+  developerId
 }) {
   // Material UI card
   const classes = useStyles();
@@ -136,9 +144,6 @@ export default function PostSolution({
         setLikes(likes + 1);
         setLiked(true);
         const result = await API.likeDevPost(id, user._id);
-
-        console.log(user._id);
-        console.log(id);
       } catch (err) {
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
@@ -150,7 +155,6 @@ export default function PostSolution({
       setLikes(likes - 1);
       setLiked(false);
       const result = await API.unlikeDevPost(id, user._id);
-      console.log(user._id);
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
     }
@@ -184,14 +188,14 @@ export default function PostSolution({
         {!isLoaded
           ? null
           : [
-              liked && isLoaded ? (
-                <IconButton aria-label="thumb down" onClick={unlikeHandler}>
-                  <ThumbUpAltIcon className={classes.liked} />
-                  <Typography variant="h6" className={classes.score}>
-                    {likes}
-                  </Typography>
-                </IconButton>
-              ) : (
+            liked && isLoaded ? (
+              <IconButton aria-label="thumb down" onClick={unlikeHandler}>
+                <ThumbUpAltIcon className={classes.liked} />
+                <Typography variant="h6" className={classes.score}>
+                  {likes}
+                </Typography>
+              </IconButton>
+            ) : (
                 <IconButton aria-label="thumb up" onClick={likeHandler}>
                   <ThumbUpAltIcon />
                   <Typography variant="h6" className={classes.score}>
@@ -199,7 +203,7 @@ export default function PostSolution({
                   </Typography>
                 </IconButton>
               )
-            ]}
+          ]}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded
@@ -213,28 +217,51 @@ export default function PostSolution({
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Resources:</Typography>
+          <Typography paragraph>
+            Comments:{' '}
+            {comments.length === 0 ? (
+              'No comments'
+            ) : (
+                <ul>
+                  {comments.map((comment) => (
+                    <li>{comment}</li>
+                  ))}
+                </ul>
+              )}
+          </Typography>
 
           <Typography paragraph>
-            Deployed Link:
+            Deployed Link:{' '}
             {deployed_link ? (
               <a href={deployed_link} target="_blank" rel="noopener noreferrer">
                 {deployed_link}
               </a>
             ) : (
-              'There is no current Deployed App'
-            )}
+                'There is no current Deployed App'
+              )}
           </Typography>
 
           <Typography paragraph>
-            Repo Link:
-            <a href={deployed_link} target="_blank" rel="noopener noreferrer">
+            Repo Link:{' '}
+            <a href={repo_link} target="_blank" rel="noopener noreferrer">
               {repo_link}
             </a>
           </Typography>
+          {user && user._id === developerId && (
+            <Grid item xs={12} className={classes.editButton}>
+              <Button
+                component={Link}
+                color="primary"
+                to={`/solution/edit/${id}`}
+                variant="contained"
+              >
+                Edit
+              </Button>
+            </Grid>
+          )}
         </CardContent>
       </Collapse>
-      <Toast open={open} setOpen={setOpen} text={'Login to like a post!'} />
+      <Toast open={open} setOpen={setOpen} text={'Login to like a solution!'} />
     </Card>
   );
 }

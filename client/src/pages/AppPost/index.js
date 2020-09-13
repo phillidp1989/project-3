@@ -12,6 +12,7 @@ import {
   Chip,
   Button
 } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from '@material-ui/icons/Edit';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
@@ -54,14 +55,16 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     display: 'flex',
     boxSizing: 'border-box',
-    // paddingLeft:
-    // padding-right: 16px;
     flexDirection: 'column',
     alignItems: 'center'
   },
   ctaLink: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    marginTop: 32
   }
 }));
 
@@ -69,9 +72,10 @@ export default function Index() {
   const classes = useStyles();
   const { id: _id } = useParams();
   const { user } = useContext(UserContext);
+  const [isLoaded, setIsLoaded] = useState(false)
   const [postData, setPostData] = useState({
     _id: '',
-    title: 'Loading...',
+    title: '',
     summary: '',
     description: '',
     category: [],
@@ -84,16 +88,19 @@ export default function Index() {
     posterId: ''
   });
 
+
   useLayoutEffect(() => {
     const { pathname } = window.location;
     const getPost = async () => {
+      setIsLoaded(false);
       const { data } = await axios.get(
         `https://app-factory-api.herokuapp.com/api${pathname}`
       );
+      setIsLoaded(true);
       setPostData({ ...data, _id });
     };
     getPost();
-    return () => {};
+    return () => { };
   }, [_id]);
 
   const { title, summary, description, category, technologies } = postData;
@@ -122,58 +129,63 @@ export default function Index() {
 
   return (
     <>
-      <Grow in={true} style={{ transitionDelay: '300ms' }}>
-        <Container component={Paper} className={classes.root}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="h2">{title}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>{summary}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              {category.map((category) => (
-                <Chip
-                  key={category}
-                  label={category}
-                  style={{ backgroundColor: categoryColour(category) }}
-                  className={classes.chip}
-                />
-              ))}
+      {!isLoaded ?
+        <Grid container className={classes.loadingContainer}><CircularProgress color='primary' /></Grid> :
+        <Grow in={true} style={{ transitionDelay: '300ms' }}>
+          <Container component={Paper} className={classes.root}>
 
-              <br />
 
-              {technologies.map((tech) => (
-                <Chip
-                  key={tech}
-                  label={tech}
-                  style={{ backgroundColor: categoryColour(category) }}
-                  className={classes.chip}
-                />
-              ))}
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h2">{title}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography>{summary}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                {category.map((category) => (
+                  <Chip
+                    key={category}
+                    label={category}
+                    style={{ backgroundColor: categoryColour(category) }}
+                    className={classes.chip}
+                  />
+                ))}
+
+                <br />
+
+                {technologies.map((tech) => (
+                  <Chip
+                    key={tech}
+                    label={tech}
+                    style={{ backgroundColor: categoryColour(category) }}
+                    className={classes.chip}
+                  />
+                ))}
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                className={classes.description}
+                dangerouslySetInnerHTML={createMarkup()} // Sanitised
+              ></Grid>
+              <Grid item xs={12} className={classes.ctaLink}>
+                {user && user.isDeveloper && (
+                  <Button
+                    component={Link}
+                    color="secondary"
+                    to={`/posts/solution/${postData._id}`}
+                    variant="contained"
+                    className={classes.ctaLink}
+                  >
+                    Build It!
+                  </Button>
+                )}
+              </Grid>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              className={classes.description}
-              dangerouslySetInnerHTML={createMarkup()} // Sanitised
-            ></Grid>
-            <Grid item xs={12} className={classes.ctaLink}>
-              {/* {user && !user.isDeveloper && ( */}
-              <Button
-                component={Link}
-                color="secondary"
-                to={`/posts/solution/${postData._id}`}
-                variant="contained"
-                className={classes.ctaLink}
-              >
-                Build It!
-              </Button>
-              {/* )} */}
-            </Grid>
-          </Grid>
-        </Container>
-      </Grow>
+          </Container>
+        </Grow>
+      }
       <PostSolutionsResults postId={_id} className={classes.postSolutions} />
 
       {user && user._id === postData.posterId && (

@@ -16,7 +16,9 @@ export default function PostResults() {
       try {
         const { data } = await API.allPosts();
         setPosts(data);
-        setActivePosts(data);
+        if (activePosts.length === 0) {
+          setActivePosts(data);
+        }
       } catch (err) {
         console.error('ERROR - PostResults.js - fetchPosts', err);
       }

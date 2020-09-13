@@ -10,32 +10,29 @@ export default function PieChart({ data }) {
       datasets: [
         {
           data: [data.totalPostsWithSolutions, data.totalPostsWithoutSolutions],
-          backgroundColor: [
-            '#FF6384',
-            '#36A2EB'
-          ],
-          hoverBackgroundColor: [
-            '#FF6384',
-            '#36A2EB'
-          ]
+          backgroundColor: ['#FF6384', '#36A2EB'],
+          hoverBackgroundColor: ['#FF6384', '#36A2EB']
         }
       ]
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     pieData();
-  }, [data])
+  }, [data]);
 
   return (
     <div>
-      <Pie data={chartData} options={{
-        responsive: true, legend: {
-          position: 'bottom'
-        }
-      }} />
+      <Pie
+        data={chartData}
+        options={{
+          responsive: true,
+          legend: {
+            position: 'bottom',
+            labels: { fontColor: '#fff' }
+          }
+        }}
+      />
     </div>
-  )
+  );
 }
-
-

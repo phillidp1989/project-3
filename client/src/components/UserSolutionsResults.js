@@ -33,6 +33,8 @@ export default function UserSolutionsResults() {
             deployed_link={solution.deployedLink}
             repo_link={solution.repoLink}
             likedBy={solution.likedBy}
+            comments={solution.comments}
+            developerId={solution.developerId}
           />
         </Grid>
       ))}
