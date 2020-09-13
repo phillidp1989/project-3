@@ -54,6 +54,7 @@ export default function PostResults() {
             description={post.description}
             score={post.score}
             likedBy={post.likedBy}
+            posterId={post.posterId}
           />
         </Grid>
       ))}
