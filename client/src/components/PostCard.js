@@ -21,10 +21,11 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography
+  Typography, Grid
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
   },
   avatarGroup: {
     marginTop: 20
+  },
+  userDetails: {
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
@@ -77,7 +82,8 @@ export default function PostCard({
   description,
   score,
   likedBy,
-  date
+  date,
+  posterId
 }) {
   // Material UI card
   const classes = useStyles();
@@ -87,6 +93,10 @@ export default function PostCard({
   const [liked, setLiked] = useState(null);
   const [open, setOpen] = useState(false);
   const [avatars, setAvatars] = useState([]);
+  const [poster, setPoster] = useState({
+    displayName: '',
+    avatar: ''
+  })
 
   // Date parsing
   const postDate = new Date(date);
@@ -141,6 +151,24 @@ export default function PostCard({
     getAvatars();
   }, []);
 
+  console.log(posterId);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await API.getUser(posterId);
+        setPoster({
+          displayName: data.displayName,
+          avatar: data.avatar
+        })
+        console.log(data);
+      } catch (err) {
+        console.error('ERROR - PostCard.js - getUser', err);
+      }
+    }
+    getUser();
+  }, [])
+
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
@@ -183,9 +211,7 @@ export default function PostCard({
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          <Alert icon={<Avatar alt={poster.displayName} src={poster.avatar} />} variant="outlined" severity="info">{poster.displayName}<br></br>{createdAt}</Alert>
         }
         key={title}
         title={
