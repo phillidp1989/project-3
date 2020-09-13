@@ -3,7 +3,7 @@ const passport = require('passport');
 const logger = require('morgan');
 const cookieSession = require('cookie-session');
 const path = require('path');
-// const cors = require('cors');
+const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
 const apiRoutes = require('./routes/apiRoutes');
@@ -21,11 +21,11 @@ require('dotenv').config();
 // Initialize express into app variable
 const app = express();
 
-// app.use(cors({
-//   origin: true,
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   credentials: true
-// }));
+app.use(cors({
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true
+}));
 
 // Initialize Morgan logger
 app.use(logger('dev'));
