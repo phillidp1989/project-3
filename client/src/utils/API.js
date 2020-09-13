@@ -151,5 +151,12 @@ export default {
     } catch (err) {
       console.error('ERROR - API.js - getDeveloperAvatars', err);
     }
+  },
+  getUser: async (posterId) => {
+    try {
+      return await axios.get(`/api/user/${posterId}`)
+    } catch (err) {
+      console.error('ERROR - API.js - getDeveloperAvatars', err);
+    }
   }
 };
