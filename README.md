@@ -1,52 +1,63 @@
-# React-Book-Search
+<h1 align="center">The App Factory</h1>
 
-## Table of Contents:
+<div align="center">
+  <img src="https://img.shields.io/github/license/phillidp1989/project-3" alt="License Badge" />
+  <img src="https://img.shields.io/github/issues/phillidp1989/project-3" alt="Issues Badge"/>
+</div>
+
+<br/>
+<br/>
+
+## Table of Contents
 
 [Description](#description)
-
-[Visuals](#visuals)
 
 [Installation](#installation)
 
 [Usage](#usage)
 
-[License](#license)
+[Tests](#tests)
 
-[Contributing](#contributing)
+[Authors](#authors)
 
-[Testing](#testing)
+<br>
 
-[Languages](#languages)
+## Description
 
-[Author](#author)
+The App Factory is a platform that unites both creative people that have interesting applications ideas and developers keen to make a good idea become reality.
 
-## Description:
-TBC
+The user can log in using Google Account or Facebook Account and can view all the other App Ideas posted by all users.
 
-## Visuals:
-![screenshot](TBC)
+The Apps Ideas posts can be filtered depending the number of likes or the date they have been created.
 
-## Installation:
-Clone folder onto your own computer by forking the repository and using the "Clone or download" button on github. Install all npm modules using the command "npm install". Open up your MongoDB connection. Run the server by calling "npm start" from the root folder.
+After login, the User Dashboard can be used to check proprietary ideas and features visual statistics regarding the user posts.
 
-## Usage:
-TBC
+The user can check all the solutions from developers for the specific idea by accessing the idea card.
 
-## License:
-<img src="https://img.shields.io/github/license/phillidp1989/React-Book-Search?logoColor=%23C2CAE8">
+The developers can log in using GitHub Account and can post solutions to any idea by filling in a form with the required information.
 
-## Contributing:
-Open to contributions for future development
+The Developer Dashboard can be used to quickly check all the apps the developer has responded to along with all revisions.
 
-## Testing:
-No testing framework used
+The App Factory is one page application build with `React.js` and _`Material UI`_ framework for front end and _`mongoDB`_ database with _`mongoose`_ and an _`express.js`_ server for the backend.
 
-## Languages:
-<img src="https://img.shields.io/github/languages/top/phillidp1989/React-Book-Search">
+_`Facebook, Github and Google OAuth2 Passport`_ packages are used for authentication and the app is deployed on Heroku.
 
-## Authors:
-Name: 
+## Installation
 
-Github Username: 
+The App Factory is Heroku deployed thus no installation is needed.
 
-Github Email Address: 
+## Usage
+
+Follow the link below to access the deployed application:
+
+https://app-factory-e6ff0.web.app/
+
+## Tests
+
+Tests conducted to ensure good functionality of server connection and database, sequelize ORM, authentication, pug.js module, third party API and Heroku deployment.
+
+## Authors
+
+- Dan Phillips
+- Jacob Houston
+- Dragos Dragomir
