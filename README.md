@@ -50,7 +50,7 @@ The App Factory is Heroku deployed thus no installation is needed.
 
 Follow the link below to access the deployed application:
 
-https://app-factory-e6ff0.web.app/
+http://app-factory-djd.herokuapp.com/
 
 ## Tests
 
