@@ -10,7 +10,7 @@ import {
   Grow,
   Grid,
   Chip,
-  Button
+  Button, Divider
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from '@material-ui/icons/Edit';
@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
   loadingContainer: {
     justifyContent: 'center',
     marginTop: 32
+  },
+  solutionTitle: {
+    textAlign: 'center'
   }
 }));
 
@@ -186,6 +189,8 @@ export default function Index() {
           </Container>
         </Grow>
       }
+      <Typography variant='h3' className={classes.solutionTitle}>Solutions</Typography>
+      <Divider variant="middle" />
       <PostSolutionsResults postId={_id} className={classes.postSolutions} />
 
       {user && user._id === postData.posterId && (
