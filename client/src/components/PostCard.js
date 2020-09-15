@@ -21,7 +21,7 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography, Grid
+  Typography, Grid, useMediaQuery, useTheme
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
   userDetails: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  smPoster: {
+    marginTop: 20
   }
 }));
 
@@ -87,11 +90,14 @@ export default function PostCard({
 }) {
   // Material UI card
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, isLoaded } = useContext(UserContext);
   const [expanded, setExpanded] = useState(false);
   const [likes, setLikes] = useState(score);
   const [liked, setLiked] = useState(null);
   const [open, setOpen] = useState(false);
+
   const [avatars, setAvatars] = useState([]);
   const [poster, setPoster] = useState({
     displayName: '',
@@ -151,8 +157,6 @@ export default function PostCard({
     getAvatars();
   }, []);
 
-  console.log(posterId);
-
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -160,8 +164,7 @@ export default function PostCard({
         setPoster({
           displayName: data.displayName,
           avatar: data.avatar
-        })
-        console.log(data);
+        });
       } catch (err) {
         console.error('ERROR - PostCard.js - getUser', err);
       }
@@ -211,7 +214,7 @@ export default function PostCard({
           </Avatar>
         }
         action={
-          <Alert icon={<Avatar alt={poster.displayName} src={poster.avatar} />} variant="outlined" severity="info">{poster.displayName}<br></br>{createdAt}</Alert>
+          !isSmall ? <Alert icon={<Avatar alt={poster.displayName} src={poster.avatar} />} variant="outlined" severity="info">Posted by {poster.displayName}<br></br>{createdAt}</Alert> : null
         }
         key={title}
         title={
@@ -230,7 +233,9 @@ export default function PostCard({
         <Typography variant="body2" color="textSecondary" component="p">
           {summary}
         </Typography>
-      </CardContent>
+        {
+          isSmall ? <Alert className={classes.smPoster} icon={<Avatar alt={poster.displayName} src={poster.avatar} />} variant="outlined" severity="info">Posted by {poster.displayName}<br></br>{createdAt}</Alert> : null
+        }      </CardContent>
       <CardActions disableSpacing>
         {!isLoaded
           ? null

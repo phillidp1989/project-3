@@ -21,7 +21,7 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography
+  Typography, useTheme, useMediaQuery
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
   },
   liked: {
     fill: '#52b202'
+  },
+  smPoster: {
+    marginTop: 20
   }
 }));
 
@@ -76,6 +79,8 @@ export default function PostSolution({
 }) {
   // Material UI card
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, isLoaded } = useContext(UserContext);
   const [expanded, setExpanded] = React.useState(false);
   const [likes, setLikes] = useState(score);
@@ -188,7 +193,7 @@ export default function PostSolution({
           </Avatar>
         }
         action={
-          <Alert icon={<Avatar alt={developer.displayName} src={developer.avatar} />} variant="outlined" severity="info">{developer.displayName}<br></br>{createdAt}</Alert>
+          !isSmall ? <Alert icon={<Avatar alt={developer.displayName} src={developer.avatar} />} variant="outlined" severity="info">Posted by {developer.displayName}<br></br>{createdAt}</Alert> : null
         }
         key={title}
         title={title}
@@ -198,6 +203,9 @@ export default function PostSolution({
         <Typography variant="body2" color="textSecondary" component="p">
           {summary}
         </Typography>
+        {
+          isSmall ? <Alert className={classes.smPoster} icon={<Avatar alt={developer.displayName} src={developer.avatar} />} variant="outlined" severity="info">Posted by {developer.displayName}<br></br>{createdAt}</Alert> : null
+        }
       </CardContent>
       <CardActions disableSpacing>
         {!isLoaded
@@ -248,7 +256,7 @@ export default function PostSolution({
           </Typography>
 
           <Typography paragraph>
-            Repo Link:
+            Repo Link:{' '}
             <a href={deployed_link} target="_blank" rel="noopener noreferrer">
               {repo_link}
             </a>

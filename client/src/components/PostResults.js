@@ -4,8 +4,27 @@ import { Grid } from '@material-ui/core';
 import AppFilterMenu from './AppFilterMenu';
 import BasicPagination from './Pagniation';
 import API from '../utils/API';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  loadingContainer: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    width: '90%',
+    flexGrow: 1
+  }
+}));
 
 export default function PostResults() {
+  const classes = useStyles();
   const [posts, setPosts] = useState([]);
   const [activePosts, setActivePosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
