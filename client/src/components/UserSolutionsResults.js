@@ -35,6 +35,7 @@ export default function UserSolutionsResults() {
             likedBy={solution.likedBy}
             comments={solution.comments}
             developerId={solution.developerId}
+            date={solution.createdAt}
           />
         </Grid>
       ))}
