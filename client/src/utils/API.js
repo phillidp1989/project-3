@@ -1,9 +1,18 @@
 import axios from 'axios';
 
+const environment = 'production';
+let url;
+
+if (environment === 'development') {
+  url = 'http://localhost:5000'
+} else {
+  url = ''
+};
+
 export default {
   currentUser: async () => {
     try {
-      return await axios.get('/api/user', {
+      return await axios.get(`${url}/api/user`, {
         withCredentials: true
       });
     } catch (err) {
@@ -12,14 +21,14 @@ export default {
   },
   allPosts: async () => {
     try {
-      return await axios.get('/api/posts');
+      return await axios.get(`${url}/api/posts`);
     } catch (err) {
       console.error('ERROR - API.js - allPosts', err);
     }
   },
   likePost: async (postId, userId) => {
     try {
-      return await axios.put('/api/posts/like', {
+      return await axios.put(`${url}/api/posts/like`, {
         postId,
         userId
       });
@@ -29,7 +38,7 @@ export default {
   },
   unlikePost: async (postId, userId) => {
     try {
-      return await axios.put('/api/posts/unlike', {
+      return await axios.put(`${url}/api/posts/unlike`, {
         postId,
         userId
       });
@@ -39,14 +48,14 @@ export default {
   },
   dashboardInfo: async (id) => {
     try {
-      return await axios.get(`/api/posts/dashboard/${id}`);
+      return await axios.get(`${url}/api/posts/dashboard/${id}`);
     } catch (err) {
       console.error('ERROR - API.js - dashboardInfo', err);
     }
   },
   getUserPosts: async (id) => {
     try {
-      return await axios.get(`/api/posts/user/${id}`);
+      return await axios.get(`${url}/api/posts/user/${id}`);
 
     } catch (err) {
       console.error('ERROR - API.js - getUserPosts', err);
@@ -57,7 +66,7 @@ export default {
     try {
       console.log(postId);
       return await axios.get(
-        `/api/solutions/post/${postId}`
+        `${url}/api/solutions/post/${postId}`
 
       );
     } catch (err) {
@@ -66,7 +75,7 @@ export default {
   },
   savePost: async (postData) => {
     try {
-      return await axios.post(`/api/posts`, postData);
+      return await axios.post(`${url}/api/posts`, postData);
     } catch (err) {
       console.error('ERROR - API.js - savePost', err);
     }
@@ -82,21 +91,21 @@ export default {
   },
   saveSolution: async (solutionData) => {
     try {
-      return await axios.post('/api/solutions', solutionData);
+      return await axios.post(`${url}/api/solutions`, solutionData);
     } catch (err) {
       console.error('ERROR - API.js - saveSolution', err);
     }
   },
   getPost: async (id) => {
     try {
-      return await axios.get(`/api/posts/${id}`);
+      return await axios.get(`${url}/api/posts/${id}`);
     } catch (err) {
       console.error('ERROR - API.js - getPost', err);
     }
   },
   getSolution: async (id) => {
     try {
-      return await axios.get(`/api/solutions/${id}`);
+      return await axios.get(`${url}/api/solutions/${id}`);
     } catch (err) {
       console.error('ERROR - API.js - getSolution', err);
     }
@@ -104,21 +113,21 @@ export default {
   updateSolution: async (solutionData) => {
     try {
       console.log(solutionData);
-      return await axios.put(`/api/solutions`, solutionData);
+      return await axios.put(`${url}/api/solutions`, solutionData);
     } catch (err) {
       console.error('ERROR - API.js - updateSolution', err);
     }
   },
   deleteSolution: async (id) => {
     try {
-      return await axios.delete(`/api/solutions/${id}`);
+      return await axios.delete(`${url}/api/solutions/${id}`);
     } catch (err) {
       console.error('ERROR - API.js - deleteSolution', err);
     }
   },
   likeDevPost: async (solutionId, userId) => {
     try {
-      return await axios.put('/api/solutions/like', {
+      return await axios.put(`${url}/api/solutions/like`, {
         solutionId,
         userId
       });
@@ -128,7 +137,7 @@ export default {
   },
   unlikeDevPost: async (solutionId, userId) => {
     try {
-      return await axios.put('/api/solutions/unlike', {
+      return await axios.put(`${url}/api/solutions/unlike`, {
         solutionId,
         userId
       });
@@ -139,7 +148,7 @@ export default {
   getUserSolutions: async (id) => {
     try {
       return await axios.get(
-        `/api/solutions/developer/${id}`
+        `${url}/api/solutions/developer/${id}`
       );
     } catch (err) {
       console.error('ERROR - API.js - getUserSolutions', err);
@@ -147,14 +156,14 @@ export default {
   },
   getDeveloperAvatars: async (id) => {
     try {
-      return await axios.get(`/api/posts/activedeveloperavatars/${id}`)
+      return await axios.get(`${url}/api/posts/activedeveloperavatars/${id}`)
     } catch (err) {
       console.error('ERROR - API.js - getDeveloperAvatars', err);
     }
   },
   getUser: async (posterId) => {
     try {
-      return await axios.get(`/api/user/${posterId}`)
+      return await axios.get(`${url}/api/user/${posterId}`)
     } catch (err) {
       console.error('ERROR - API.js - getDeveloperAvatars', err);
     }
