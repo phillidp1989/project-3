@@ -261,7 +261,7 @@ export default function PostSolution({
           )}
         </CardContent>
       </Collapse>
-      <Toast open={open} setOpen={setOpen} text={'Login to like a solution!'} />
+      <Toast open={open} setOpen={setOpen} text={'Login to like a post!'} />
     </Card>
   );
 }
