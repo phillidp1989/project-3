@@ -133,12 +133,13 @@ export default function Index(props) {
     const errCheck = (err, { title, summary, description, category }) => {
       // These checks need to be separate so the inputs don't flag errors on page load
       // Check if user interacted with form at all
-      if (title + summary + description === '') return 'something';
+      if (title.trim() + summary.trim() + description.trim() === '')
+        return 'something';
 
       // Making sure user hasn't interacted with a single value
-      if (title.length === 0) return 'title';
-      if (summary.length === 0) return 'summary';
-      if (description.length === 0) return 'description';
+      if (title.trim().length === 0) return 'title';
+      if (summary.trim().length === 0) return 'summary';
+      if (description.trim().length === 0) return 'description';
       const chosenCategoryCount = category.filter(({ checked }) => checked)
         .length;
       if (chosenCategoryCount === 0) return 'categories';
@@ -176,7 +177,7 @@ export default function Index(props) {
   const inputErrCheck = (e) => {
     const { name, value } = e.target;
     // Setting error state if required input changes to empty
-    setErr({ ...err, [name]: value.length === 0 });
+    setErr({ ...err, [name]: value.trim().length === 0 });
   };
 
   return (

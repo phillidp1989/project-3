@@ -24,7 +24,7 @@ export default function PostResults() {
       }
     };
     fetchPosts();
-  }, [currentPage]);
+  }, [currentPage, activePosts.length]);
 
   // Pagination logic
   const indexOfLastPost = currentPage * postsPerPage;
