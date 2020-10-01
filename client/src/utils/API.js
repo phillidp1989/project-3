@@ -80,6 +80,13 @@ export default {
       console.error('ERROR - API.js - savePost', err);
     }
   },
+  updatePost: async (postData) => {
+    try {
+      return await axios.put(`${url}/api/posts`, postData);
+    } catch (err) {
+      console.error('ERROR - API.js - updatePost', err);
+    }
+  },
   github: async (username) => {
     try {
       return await axios.get(
