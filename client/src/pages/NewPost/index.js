@@ -165,12 +165,23 @@ export default function Index(props) {
       .map(({ name }) => name);
 
     const newPost = { ...postData, category, posterId: user._id };
+    const editedPost = { ...postData, category, posterId: user._id, _id: currentPost };
 
-    try {
-      await API.savePost(newPost);
-      setDialogOpen(true);
-    } catch (err) {
-      console.error('ERROR - index.js - postForm', err);
+    if (currentPost) {
+      try {
+        await API.updatePost(editedPost);
+        setDialogOpen(true);
+      } catch (err) {
+        console.error('ERROR - index.js - postForm', err);
+      }
+    } else {
+      try {
+        await API.savePost(newPost);
+        setDialogOpen(true);
+      } catch (err) {
+        console.error('ERROR - index.js - postForm', err);
+      }
+
     }
   };
 
