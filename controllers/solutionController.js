@@ -82,22 +82,21 @@ module.exports = {
   },
   // Delete a solution
   deleteSolution: async (req, res, next) => {
-    console.log(req.params);
-    const { id: solutionId } = req.params;
+    const { id } = req.params;
     try {
-      const query = await db.Solution.findOne({ _id: solutionId }).populate([
+      const query = await db.Solution.findOne({ _id: id }).populate([
         'postId',
         'developerId'
       ]);
       const postRef = await db.Post.updateOne(
         { _id: query.postId._id },
-        { $pull: { solutions: solutionId } }
+        { $pull: { solutions: id } }
       );
       const userRef = await db.User.updateOne(
         { _id: query.developerId._id },
-        { $pull: { solutions: solutionId } }
+        { $pull: { solutions: id } }
       );
-      const result = await db.Solution.remove({ _id: solutionId });
+      const result = await db.Solution.remove({ _id: id });
       res.status(200).json(result, postRef, userRef);
     } catch (err) {
       next(err);
