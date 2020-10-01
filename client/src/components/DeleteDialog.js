@@ -12,6 +12,7 @@ import API from '../utils/API';
 export default function DeleteDialog({ deleteDialogOpen, setDeleteDialogOpen, returnLink, text, id }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  console.log(id);
 
   const handleClose = async () => {
     const result = await API.deleteSolution(id);
