@@ -15,9 +15,16 @@ export default function PostResults() {
     const fetchPosts = async () => {
       try {
         const { data } = await API.allPosts();
-        setPosts(data);
+        const datePosts = [...data].sort((a, b) => {
+          return a.createdAt < b.createdAt
+            ? 1
+            : a.createdAt > b.createdAt
+              ? -1
+              : 0;
+        })
+        setPosts(datePosts);
         if (activePosts.length === 0) {
-          setActivePosts(data);
+          setActivePosts(datePosts);
         }
       } catch (err) {
         console.error('ERROR - PostResults.js - fetchPosts', err);
@@ -54,13 +61,14 @@ export default function PostResults() {
             description={post.description}
             score={post.score}
             likedBy={post.likedBy}
+            posterId={post.posterId}
           />
         </Grid>
       ))}
       <Grid item xs={10}>
         <BasicPagination
           postsPerPage={postsPerPage}
-          totalPosts={posts.length}
+          totalPosts={activePosts.length}
           handleChange={handleChange}
         />
       </Grid>

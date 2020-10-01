@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
@@ -21,10 +20,13 @@ import {
   Collapse,
   Avatar,
   IconButton,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,6 +68,13 @@ const useStyles = makeStyles((theme) => ({
   },
   avatarGroup: {
     marginTop: 20
+  },
+  smPoster: {
+    marginTop: 20
+  },
+  posterAvatar: {
+    width: theme.spacing(5),
+    height: theme.spacing(5)
   }
 }));
 
@@ -77,16 +86,23 @@ export default function PostCard({
   description,
   score,
   likedBy,
-  date
+  date,
+  posterId
 }) {
   // Material UI card
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, isLoaded } = useContext(UserContext);
   const [expanded, setExpanded] = useState(false);
   const [likes, setLikes] = useState(score);
   const [liked, setLiked] = useState(null);
   const [open, setOpen] = useState(false);
   const [avatars, setAvatars] = useState([]);
+  const [poster, setPoster] = useState({
+    displayName: '',
+    avatar: ''
+  });
 
   // Date parsing
   const postDate = new Date(date);
@@ -141,6 +157,21 @@ export default function PostCard({
     getAvatars();
   }, []);
 
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await API.getUser(posterId);
+        setPoster({
+          displayName: data.displayName,
+          avatar: data.avatar
+        });
+      } catch (err) {
+        console.error('ERROR - PostCard.js - getUser', err);
+      }
+    };
+    getUser();
+  }, []);
+
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
@@ -182,6 +213,27 @@ export default function PostCard({
             {categoryIcon}
           </Avatar>
         }
+        action={
+          !isSmall ? (
+            <Alert
+              icon={
+                <Avatar
+                  alt={poster.displayName}
+                  src={poster.avatar}
+                  className={classes.posterAvatar}
+                />
+              }
+              variant="outlined"
+              severity="info"
+            >
+              <Typography variant="caption">
+                Posted by {poster.displayName}
+                <br></br>
+                {createdAt}
+              </Typography>
+            </Alert>
+          ) : null
+        }
         key={title}
         title={
           <Link
@@ -189,29 +241,42 @@ export default function PostCard({
             className={classes.postsTitle}
             color="primary"
           >
-            {title}
+            <Typography variant='h6'>{title}</Typography>
           </Link>
         }
-        subheader={createdAt}
       />
 
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {summary}
         </Typography>
+        {isSmall ? (
+          <Alert
+            className={classes.smPoster}
+            icon={<Avatar alt={poster.displayName} src={poster.avatar} />}
+            variant="outlined"
+            severity="info"
+          >
+            <Typography variant="caption">
+              Posted by {poster.displayName}
+              <br></br>
+              {createdAt}
+            </Typography>
+          </Alert>
+        ) : null}
       </CardContent>
       <CardActions disableSpacing>
         {!isLoaded
           ? null
           : [
-              liked && isLoaded ? (
-                <IconButton aria-label="thumb down" onClick={unlikeHandler}>
-                  <ThumbUpAltIcon className={classes.liked} />
-                  <Typography variant="h6" className={classes.score}>
-                    {likes}
-                  </Typography>
-                </IconButton>
-              ) : (
+            liked && isLoaded ? (
+              <IconButton aria-label="thumb down" onClick={unlikeHandler}>
+                <ThumbUpAltIcon className={classes.liked} />
+                <Typography variant="h6" className={classes.score}>
+                  {likes}
+                </Typography>
+              </IconButton>
+            ) : (
                 <IconButton aria-label="thumb up" onClick={likeHandler}>
                   <ThumbUpAltIcon />
                   <Typography variant="h6" className={classes.score}>
@@ -219,7 +284,7 @@ export default function PostCard({
                   </Typography>
                 </IconButton>
               )
-            ]}
+          ]}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded
