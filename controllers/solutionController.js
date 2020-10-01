@@ -82,6 +82,7 @@ module.exports = {
   },
   // Delete a solution
   deleteSolution: async (req, res, next) => {
+    console.log(req.params);
     const { id: solutionId } = req.params;
     try {
       const query = await db.Solution.findOne({ _id: solutionId }).populate([
