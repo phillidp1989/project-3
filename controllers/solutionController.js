@@ -90,7 +90,7 @@ module.exports = {
       ]);
       const postRef = await db.Post.updateOne(
         { _id: query.postId._id },
-        { $pull: { solutions: id } }
+        { $pull: { solutions: id, activeDevelopers: query.developerId._id } }
       );
       const userRef = await db.User.updateOne(
         { _id: query.developerId._id },
