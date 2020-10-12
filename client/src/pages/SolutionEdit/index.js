@@ -132,7 +132,6 @@ export default function SolutionEdit() {
   // useEffect for post data API call
   useEffect(() => {
     const getSolution = async () => {
-      console.log(id);
       try {
         const { data } = await API.getSolution(id);
         const {
@@ -224,7 +223,7 @@ export default function SolutionEdit() {
     setComment('');
   };
 
-  // Add comments handler
+  // Change repo handler
   const editRepo = (e) => {
     e.preventDefault();
     setRepoPresent(false);
@@ -261,6 +260,7 @@ export default function SolutionEdit() {
   // Handles edit save button
   const saveUpdates = async (e) => {
     e.preventDefault();
+    console.log(solutionData);
     const result = await API.updateSolution(solutionData);
     setDialogOpen(true);
   };
