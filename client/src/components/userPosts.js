@@ -11,7 +11,7 @@ export default function UserPosts() {
   const [activePosts, setActivePosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(5);
-  const { user, isLoaded } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const getUserPosts = async () => {
@@ -58,13 +58,14 @@ export default function UserPosts() {
             description={post.description}
             score={post.score}
             likedBy={post.likedBy}
+            posterId={post.posterId}
           />
         </Grid>
       ))}
       <Grid item xs={10}>
         <BasicPagination
           postsPerPage={postsPerPage}
-          totalPosts={posts.length}
+          totalPosts={activePosts.length}
           handleChange={handleChange}
         />
       </Grid>

@@ -131,79 +131,80 @@ export default function Index() {
     <>
       {!isLoaded ?
         <Grid container className={classes.loadingContainer}><CircularProgress color='primary' /></Grid> :
-        <Grow in={true} style={{ transitionDelay: '300ms' }}>
-          <Container component={Paper} className={classes.root}>
+        <>
+          <Grow in={true} style={{ transitionDelay: '300ms' }}>
+            <Container component={Paper} className={classes.root}>
 
 
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="h2">{title}</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography>{summary}</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                {category.map((category) => (
-                  <Chip
-                    key={category}
-                    label={category}
-                    style={{ backgroundColor: categoryColour(category) }}
-                    className={classes.chip}
-                  />
-                ))}
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography variant="h2">{title}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography>{summary}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  {category.map((category) => (
+                    <Chip
+                      key={category}
+                      label={category}
+                      style={{ backgroundColor: categoryColour(category) }}
+                      className={classes.chip}
+                    />
+                  ))}
 
-                <br />
+                  <br />
 
-                {technologies.map((tech) => (
-                  <Chip
-                    key={tech}
-                    label={tech}
-                    style={{ backgroundColor: categoryColour(category) }}
-                    className={classes.chip}
-                  />
-                ))}
+                  {technologies.map((tech) => (
+                    <Chip
+                      key={tech}
+                      label={tech}
+                      style={{ backgroundColor: categoryColour(category) }}
+                      className={classes.chip}
+                    />
+                  ))}
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  className={classes.description}
+                  dangerouslySetInnerHTML={createMarkup()} // Sanitised
+                ></Grid>
+                <Grid item xs={12} className={classes.ctaLink}>
+                  {user && user.isDeveloper && (
+                    <Button
+                      component={Link}
+                      color="secondary"
+                      to={`/posts/solution/${postData._id}`}
+                      variant="contained"
+                      className={classes.ctaLink}
+                    >
+                      Build It!
+                    </Button>
+                  )}
+                </Grid>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                className={classes.description}
-                dangerouslySetInnerHTML={createMarkup()} // Sanitised
-              ></Grid>
-              <Grid item xs={12} className={classes.ctaLink}>
-                {user && user.isDeveloper && (
-                  <Button
-                    component={Link}
-                    color="secondary"
-                    to={`/posts/solution/${postData._id}`}
-                    variant="contained"
-                    className={classes.ctaLink}
-                  >
-                    Build It!
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          </Container>
-        </Grow>
+            </Container>
+          </Grow>
+          <PostSolutionsResults postId={_id} className={classes.postSolutions} />
+          {user && user._id === postData.posterId && (
+            <Zoom in={true}>
+              <Fab
+                component={Link}
+                to={{
+                  pathname: `/posts/edit/${postData._id}`,
+                  currentPost: postData
+                }}
+                className={classes.fab}
+                color="secondary"
+                aria-label="Edit Post"
+              >
+                <EditIcon />
+              </Fab>
+            </Zoom>
+          )}
+        </>
       }
-      <PostSolutionsResults postId={_id} className={classes.postSolutions} />
-
-      {user && user._id === postData.posterId && (
-        <Zoom in={true}>
-          <Fab
-            component={Link}
-            to={{
-              pathname: `/posts/edit/${postData._id}`,
-              currentPost: postData
-            }}
-            className={classes.fab}
-            color="secondary"
-            aria-label="Edit Post"
-          >
-            <EditIcon />
-          </Fab>
-        </Zoom>
-      )}
     </>
   );
 }

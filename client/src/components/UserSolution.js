@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
@@ -23,9 +22,12 @@ import {
   IconButton,
   Typography,
   Button,
-  Grid
+  Grid,
+  useMediaQuery
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
   editButton: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  smPoster: {
+    marginTop: 20
   }
 }));
 
@@ -82,11 +87,17 @@ export default function PostSolution({
 }) {
   // Material UI card
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, isLoaded } = useContext(UserContext);
   const [expanded, setExpanded] = React.useState(false);
   const [likes, setLikes] = useState(score);
   const [liked, setLiked] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const [developer, setDeveloper] = useState({
+    displayName: '',
+    avatar: ''
+  })
 
   // Date parsing
   const postDate = new Date(date);
@@ -131,6 +142,21 @@ export default function PostSolution({
     }
   }, [isLoaded]);
 
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await API.getUser(developerId);
+        setDeveloper({
+          displayName: data.displayName,
+          avatar: data.avatar
+        })
+      } catch (err) {
+        console.error('ERROR - PostCard.js - getUser', err);
+      }
+    }
+    getUser();
+  }, [])
+
   const handleExpandClick = (event) => {
     event.stopPropagation();
     setExpanded(!expanded);
@@ -143,7 +169,7 @@ export default function PostSolution({
       try {
         setLikes(likes + 1);
         setLiked(true);
-        const result = await API.likeDevPost(id, user._id);
+        await API.likeDevPost(id, user._id);
       } catch (err) {
         console.error('ERROR - PostCard.js - likeHandler', err);
       }
@@ -154,7 +180,7 @@ export default function PostSolution({
     try {
       setLikes(likes - 1);
       setLiked(false);
-      const result = await API.unlikeDevPost(id, user._id);
+      await API.unlikeDevPost(id, user._id);
     } catch (err) {
       console.error('ERROR - PostCard.js - unlikeHandler', err);
     }
@@ -171,18 +197,19 @@ export default function PostSolution({
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          !isSmall ? <Alert icon={<Avatar alt={developer.displayName} src={developer.avatar} />} variant="outlined" severity="info"><Typography variant='caption'>Posted by {developer.displayName}<br></br>{createdAt}</Typography></Alert> : null
         }
         key={title}
-        title={title}
+        title={<Typography variant='h6'>{title}</Typography>}
       />
 
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {summary}
         </Typography>
+        {
+          isSmall ? <Alert className={classes.smPoster} icon={<Avatar alt={developer.displayName} src={developer.avatar} />} variant="outlined" severity="info"><Typography variant='caption'>Posted by {developer.displayName}<br></br>{createdAt}</Typography></Alert> : null
+        }
       </CardContent>
       <CardActions disableSpacing>
         {!isLoaded
@@ -261,7 +288,7 @@ export default function PostSolution({
           )}
         </CardContent>
       </Collapse>
-      <Toast open={open} setOpen={setOpen} text={'Login to like a post!'} />
+      <Toast open={open} setOpen={setOpen} text={'Login to like a solution!'} />
     </Card>
   );
 }
