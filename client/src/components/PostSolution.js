@@ -288,7 +288,7 @@ export default function PostSolution({
 
           <Typography paragraph>
             Repo Link:{' '}
-            <a href={deployed_link} target="_blank" rel="noopener noreferrer">
+            <a href={repo_link} target="_blank" rel="noopener noreferrer">
               {repo_link}
             </a>
           </Typography>
